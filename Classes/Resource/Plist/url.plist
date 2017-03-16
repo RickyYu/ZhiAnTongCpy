@@ -41,17 +41,17 @@
 	<key>LOAD_COUNT_COM</key>
 	<string>/appDanger/nosecuritycheck/loadCountCom.xhtml</string>
 	<key>BASE_URL_DA</key>
-	<string>http://192.168.2.110:7091/huzhouArchives</string>
+	<string>http://192.168.2.224:8022/huzhouArchives</string>
 	<key>CREATE_COMPANY_DANGER</key>
 	<string>/appDanger/nosecuritycheck/createCompanyDanger.xhtml</string>
+	<key>UPDATE_COMPANY_DANGER</key>
+	<string>/appDanger/nosecuritycheck/updateCompanyDanger.xhtml</string>
 	<key>UPDATE_SAFETY_CHECK</key>
 	<string>/appSafety/nosecuritycheck/updateSafetyCheck.xhtml</string>
 	<key>LOAD_EXPERTS</key>
 	<string>/appExpert/nosecuritycheck/loadExperts.xhtml</string>
 	<key>LOAD_CPY_NORMALDANGER</key>
 	<string>/appNomalDanger/nosecuritycheck/loadNomalDanger.xhtml</string>
-	<key>UPDATE_COMPANY_DANGER</key>
-	<string>/appDanger/nosecuritycheck/updateCompanyDanger.xhtml</string>
 	<key>CREATE_PRODUCE_CALLBACK</key>
 	<string>/appProduceLocaleNote/nosecuritycheck/createProduceCallBack.xhtml</string>
 	<key>LOGIN</key>
@@ -87,9 +87,7 @@
 	<key>LOAD_MATTER_HISTORY_LIST</key>
 	<string>/appSafety/nosecuritycheck/loadMatterHistoryList.xhtml</string>
 	<key>BASE_URL_YH</key>
-	<string>http://192.168.2.110:7090/huzhou</string>
-	<key>BASE_URL_YH_temp</key>
-	<string>http://192.168.2.213:8082/huzhou</string>
+	<string>http://192.168.2.224:8029/huzhou</string>
 	<key>LOAD_PRODUCE_CALLBACKS</key>
 	<string>/appProduceLocaleNote/nosecuritycheck/loadProduceCallBacks.xhtml</string>
 	<key>CREATE_DANGER_GORVER</key>
@@ -110,6 +108,8 @@
 	<string>/appDangerGorver/nosecuritycheck/createDangerGorverInit.xhtml</string>
 	<key>LOAD_HISTORY_PRODUCE</key>
 	<string>/appProduceLocaleNote/nosecuritycheck/loadHistoryProduceCallBacks.xhtml</string>
+	<key>BASE_URL_YH_temp</key>
+	<string>http://192.168.2.2:8082/huzhou</string>
 	<key>GET_COMPANY_GRID</key>
 	<string>/appCheckRecord/nosecuritycheck/loadCompanyGrid.xhtml</string>
 	<key>LOAD_SAFETY</key>

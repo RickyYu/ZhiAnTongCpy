@@ -34,9 +34,11 @@ class NetworkTool: Alamofire.Manager {
             "Accept-Language" : "zh-CN,zh;q=0.8,en;q=0.6"
         ]
         //"Content-Type": "application/json;charset=UTF-8"  加上此header报type不能为空
+        print(AppTools.getServiceURLWithYh("LOGIN"))
         request(.POST, AppTools.getServiceURLWithYh("LOGIN"), parameters: addParameters, encoding: .URL, headers: headers).responseJSON(queue: dispatch_get_main_queue(), options: []){(response) in
             guard response.result.isSuccess else {
-                SVProgressHUD.showErrorWithStatus("加载失败...")
+                SVProgressHUD.dismiss()
+                //SVProgressHUD.showErrorWithStatus("加载失败...")
                 finished(login:nil,error: "服务器异常")
                 return
             }

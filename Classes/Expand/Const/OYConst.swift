@@ -16,8 +16,12 @@ let PAGE_SIZE = 15
 let LOAD_FINISH = "加载完毕"
 let NOTICE_CPY_NAME = "请输入企业名称"
 let NOTICE_SECURITY_NAME = "你的账号在另一台设备登录，如非本人操作，请注意账号安全!"
+let NOTICE_SECURITY_SUCCESS = "密码修改成功,请重新登录!"
+let NOTICE_NETWORK_ERROR = "网络连接失败，请检查是否开启网络!"
+let NOTICE_MAX_IMAGE = "最多上传\(IMAGE_MAX_SELECTEDNUM)张照片！"
+let MAX_INPUT_NUM = 30
 //最大上传图片数
-let IMAGE_MAX_SELECTEDNUM = 9
+let IMAGE_MAX_SELECTEDNUM = 1
 
 
 let SCREEN_WIDTH = UIScreen.mainScreen().bounds.size.width
@@ -45,7 +49,7 @@ func YMGlobalDeapBlueColor() -> UIColor {
 
 /// navagtion蓝
 func YMGlobalBlueColor() -> UIColor {
-    return YMColor(0, g: 102, b: 255, a: 1.0)
+    return YMColor(0, g: 120, b: 255, a: 1.0)
 }
 
 

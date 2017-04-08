@@ -12,7 +12,7 @@ import SnapKit
 import SwiftyJSON
 import UsefulPickerView
 
-class MajorHiddenDetailController: PhotoViewController {
+class MajorHiddenDetailController: SinglePhotoViewController {
     
     var customView1  = DetailCellView()
     var customView2  = DetailCellView()
@@ -24,17 +24,25 @@ class MajorHiddenDetailController: PhotoViewController {
     var customView11  = DetailCellView()
     var customView12  = DetailCellView()
     var customView13  = DetailCellView()
+    var customView14  = DetailCellView()
     var submitBtn = UIButton()
-    var scrollView: UIScrollView!
+    var cstScrollView: UIScrollView!
     var normalDangerId:String!
     var majorCheckInfoModel:MajorCheckInfoModel!
     var isGorover:String!
     override func viewDidLoad() {
+        customView4.textField.addTarget(self, action:  #selector(self.textDidChange(_:)), forControlEvents: UIControlEvents.EditingChanged)
+        customView10.textField.addTarget(self, action: #selector(self.textDidChange(_:)), forControlEvents: UIControlEvents.EditingChanged)
+        customView11.textField.addTarget(self, action: #selector(self.textDidChange(_:)), forControlEvents: UIControlEvents.EditingChanged)
         self.view.backgroundColor = UIColor.whiteColor()
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.keyboardWillShow(_:)), name:UIKeyboardWillShowNotification, object: nil)
+        //当键盘收起的时候会向系统发出一个通知，
+        //这个时候需要注册另外一个监听器响应该通知
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.keyboardWillHide(_:)), name:UIKeyboardWillHideNotification, object: nil)
         if isGorover == "1"{
         //重大隐患整改历史记录
             setNavagation("重大隐患整改历史记录")
-            self.InitZgPage()
+            self.initZgPage()
         }else{
          getData()
         }
@@ -68,12 +76,12 @@ class MajorHiddenDetailController: PhotoViewController {
                 if isGov {
                     self.setNavagation("重大隐患查看")
                     self.showHint("政府端录入隐患不能整改", duration: 1, yOffset: 0)
-                    self.InitViewPage()
+                    self.initViewPage()
                     return
                 }else{
                     self.setNavagation("重大隐患整改")
                     //初始化整改页面
-                    self.InitZgPage()
+                    self.initZgPage()
                     self.setZgData()
                 }
             }else{
@@ -86,55 +94,63 @@ class MajorHiddenDetailController: PhotoViewController {
     
 
   
-    func InitViewPage(){
-        scrollView = UIScrollView(frame: CGRectMake(0, 0, SCREEN_WIDTH, 700))
-        scrollView!.pagingEnabled = true
-        scrollView!.scrollEnabled = true
-        scrollView!.showsHorizontalScrollIndicator = true
-        scrollView!.showsVerticalScrollIndicator = false
-        scrollView!.scrollsToTop = true
-        scrollView!.contentSize = CGSizeMake(SCREEN_WIDTH, 700)
+    func initViewPage(){
+        cstScrollView = UIScrollView(frame: CGRectMake(0, 0, SCREEN_WIDTH, 700))
+        //scrollView!.pagingEnabled = true
+        cstScrollView!.scrollEnabled = true
+        cstScrollView!.showsHorizontalScrollIndicator = true
+        cstScrollView!.showsVerticalScrollIndicator = false
+        cstScrollView!.scrollsToTop = true
+        cstScrollView!.contentSize = CGSizeMake(SCREEN_WIDTH, 700)
         customView1 = DetailCellView(frame:CGRectMake(0, 0, SCREEN_WIDTH, 45))
         customView1.setLabelName("联系人：")
-        customView1.setRTextField(majorCheckInfoModel.linkMan)
+        customView1.setRTextFieldGray(majorCheckInfoModel.linkMan)
 
         
         customView2 = DetailCellView(frame:CGRectMake(0, 45, SCREEN_WIDTH, 45))
         customView2.setLabelName("联系电话：")
-        customView2.setRTextField(majorCheckInfoModel.linkTel)
+        customView2.setRTextFieldGray(majorCheckInfoModel.linkTel)
         
         
         customView3 = DetailCellView(frame:CGRectMake(0, 90, SCREEN_WIDTH, 45))
         customView3.setLabelName("手机：")
-        customView3.setRTextField(majorCheckInfoModel.linkMobile)
+        customView3.setRTextFieldGray(majorCheckInfoModel.linkMobile)
         
         
         customView4 = DetailCellView(frame:CGRectMake(0, 135, SCREEN_WIDTH, 45))
         customView4.setLabelName("隐患治理情况:")
-        customView4.setRTextField(majorCheckInfoModel.descriptions)
+        customView4.setRTextFieldGray(majorCheckInfoModel.descriptions)
         
         customView10 = DetailCellView(frame:CGRectMake(0, 180, SCREEN_WIDTH, 45))
         customView10.setLabelName("单位负责人:")
-        customView10.setRTextField(majorCheckInfoModel.chargePerson)
+        customView10.setRTextFieldGray(majorCheckInfoModel.chargePerson)
         
         customView11 = DetailCellView(frame:CGRectMake(0, 225, SCREEN_WIDTH, 45))
         customView11.setLabelName("填表人:")
-        customView11.setRTextField(majorCheckInfoModel.fillMan)
+        customView11.setRTextFieldGray(majorCheckInfoModel.fillMan)
         
         customView13 = DetailCellView(frame:CGRectMake(0, 270, SCREEN_WIDTH, 145))
         customView13.setLabelName("备注：")
         customView13.setTextViewShow()
         
-        self.scrollView.addSubview(customView1)
-        self.scrollView.addSubview(customView2)
-        self.scrollView.addSubview(customView3)
-        self.scrollView.addSubview(customView4)
-        self.scrollView.addSubview(customView10)
-        self.scrollView.addSubview(customView11)
-        self.scrollView.addSubview(customView13)
-        self.view.addSubview(scrollView)
+        customView1.textField.enabled = false
+        customView2.textField.enabled = false
+        customView3.textField.enabled = false
+        customView4.textField.enabled = false
+        customView10.textField.enabled = false
+        customView11.textField.enabled = false
+        customView13.textView.editable = false
         
-        scrollView.snp_makeConstraints { make in
+        self.cstScrollView.addSubview(customView1)
+        self.cstScrollView.addSubview(customView2)
+        self.cstScrollView.addSubview(customView3)
+        self.cstScrollView.addSubview(customView4)
+        self.cstScrollView.addSubview(customView10)
+        self.cstScrollView.addSubview(customView11)
+        self.cstScrollView.addSubview(customView13)
+        self.view.addSubview(cstScrollView)
+        
+        cstScrollView.snp_makeConstraints { make in
             make.top.equalTo(self.view.snp_top).offset(64)
             make.left.equalTo(self.view.snp_left)
             make.bottom.equalTo(self.view.snp_bottom).offset(-5)
@@ -144,29 +160,70 @@ class MajorHiddenDetailController: PhotoViewController {
     }
     
     func setZgData(){
-      customView1.setRTextField(majorCheckInfoModel.linkMan)
-        customView2.setRTextField(majorCheckInfoModel.linkTel)
-      
-        customView3.setRTextField(majorCheckInfoModel.linkMobile)
-        customView4.setRTextField(majorCheckInfoModel.descriptions)
-        customView10.setRTextField(majorCheckInfoModel.chargePerson)
-        customView11.setRTextField(majorCheckInfoModel.fillMan)
+        //true 为政府
+        let isGov :Bool = majorCheckInfoModel.gov
+        if isGov {
+           submitBtn.hidden = true
+            
+             customView1.textField.enabled = false
+            customView2.textField.enabled = false
+            customView3.textField.enabled = false
+            customView4.textField.enabled = false
+            customView10.textField.enabled = false
+            customView11.textField.enabled = false
+           
+            
+            
+            customView1.setRTextFieldGray(majorCheckInfoModel.linkMan)
+            customView2.setRTextFieldGray(majorCheckInfoModel.linkTel)
+            customView8.setRRightLabelGray(majorCheckInfoModel.finishDate)
+            customView3.setRTextFieldGray(majorCheckInfoModel.linkMobile)
+            customView4.setRTextFieldGray(majorCheckInfoModel.descriptions)
+            customView10.setRTextFieldGray(majorCheckInfoModel.chargePerson)
+            customView12.setRRightLabelGray(majorCheckInfoModel.modifyTime)
+            customView11.setRTextFieldGray(majorCheckInfoModel.fillMan)
+
+        }else {
+            submitBtn.hidden = false
+            customView1.setRTextField(majorCheckInfoModel.linkMan)
+            customView2.setRTextField(majorCheckInfoModel.linkTel)
+            customView8.setRRightLabel(majorCheckInfoModel.finishDate)
+            customView3.setRTextField(majorCheckInfoModel.linkMobile)
+            customView4.setRTextField(majorCheckInfoModel.descriptions)
+            customView9.setRTextField(String(format: "%.2f",majorCheckInfoModel.governMoney))
+            customView10.setRTextField(majorCheckInfoModel.chargePerson)
+            customView12.setRRightLabel(majorCheckInfoModel.modifyTime)
+            customView11.setRTextField(majorCheckInfoModel.fillMan)
+            if majorCheckInfoModel.fileRealPath != "" {
+                self.customView9.hidden = false
+                self.customView9.setLineViewHidden()
+                let base_path = PlistTools.loadStringValue("BASE_URL_YH")
+                let imageView = UIImageView()
+                
+                imageView.kf_setImageWithURL(NSURL(string: base_path+majorCheckInfoModel.fileRealPath)!, placeholderImage: UIImage(named: "icon_photo_bg"), optionsInfo: nil, progressBlock: { (receivedSize, totalSize) in
+                    
+                    }, completionHandler: { (image, error, cacheType, imageURL) in
+                        self.addImageView(imageView)
+                })
+            }
+        }
+
     }
     
-    func InitZgPage(){
-        scrollView = UIScrollView(frame: CGRectMake(0, 0, SCREEN_WIDTH, 700))
-        scrollView!.pagingEnabled = true
-        scrollView!.scrollEnabled = true
-        scrollView!.showsHorizontalScrollIndicator = true
-        scrollView!.showsVerticalScrollIndicator = false
-        scrollView!.scrollsToTop = true
-        scrollView!.contentSize = CGSizeMake(SCREEN_WIDTH, 700)
+    func initZgPage(){
+        cstScrollView = UIScrollView(frame: CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT))
+        //scrollView!.pagingEnabled = true
+        cstScrollView!.scrollEnabled = true
+        cstScrollView!.showsHorizontalScrollIndicator = true
+        cstScrollView!.showsVerticalScrollIndicator = false
+        cstScrollView!.scrollsToTop = true
+        cstScrollView!.contentSize = CGSizeMake(SCREEN_WIDTH, 825)
         
-        submitBtn.setTitle("保存", forState:.Normal)
+        submitBtn.setTitle("提交", forState:.Normal)
         submitBtn.backgroundColor = YMGlobalDeapBlueColor()
         submitBtn.setTitleColor(UIColor.greenColor(), forState: .Highlighted) //触摸状态下文字的颜色
         submitBtn.addTarget(self, action: #selector(self.submit), forControlEvents: UIControlEvents.TouchUpInside)
-        
+      
         
         customView1 = DetailCellView(frame:CGRectMake(0, 0, SCREEN_WIDTH, 45))
         customView1.setLabelName("联系人：")
@@ -178,7 +235,7 @@ class MajorHiddenDetailController: PhotoViewController {
         
         
         customView3 = DetailCellView(frame:CGRectMake(0, 90, SCREEN_WIDTH, 45))
-        customView3.setLabelName("手机：")
+        customView3.setLabelName("手  机：")
         
         customView4 = DetailCellView(frame:CGRectMake(0, 135, SCREEN_WIDTH, 45))
         customView4.setLabelName("隐患治理情况:")
@@ -205,14 +262,14 @@ class MajorHiddenDetailController: PhotoViewController {
         
         customView8 = DetailCellView(frame:CGRectMake(0, 315, SCREEN_WIDTH, 45))
         customView8.setLabelName("完成整治时间：")
-        customView8.setRRightLabel("")
         customView8.setTimeImg()
         customView8.addOnClickListener(self, action: #selector(self.finishTimes))
         
         
         customView9 = DetailCellView(frame:CGRectMake(0, 360, SCREEN_WIDTH, 45))
-        customView9.setLabelName("实际投入资金：（单位：万）")
+        customView9.setLabelName("实际投入资金:(单位：万)")
         customView9.setLabelMax()
+        customView9.setTextFieldMax()
         customView9.setRTextField("")
         
         customView10 = DetailCellView(frame:CGRectMake(0, 405, SCREEN_WIDTH, 45))
@@ -225,7 +282,7 @@ class MajorHiddenDetailController: PhotoViewController {
         
         customView12 = DetailCellView(frame:CGRectMake(0, 495, SCREEN_WIDTH, 45))
         customView12.setLabelName("填报时间：")
-        customView12.setRRightLabel("")
+        
         customView12.setTimeImg()
         customView12.addOnClickListener(self, action: #selector(self.uploadTimes))
 
@@ -233,50 +290,59 @@ class MajorHiddenDetailController: PhotoViewController {
         customView13.setLabelName("备注：")
         customView13.setTextViewShow()
         
+        customView14 = DetailCellView(frame:CGRectMake(0, 685, SCREEN_WIDTH, 45))
+        customView14.setLabelName("现场图片：")
+        customView14.setRCenterLabel("")
+        customView14.setPhotoImg()
+        customView14.addOnClickListener(self, action: #selector(self.choiceImage))
+        setImageViewLoc(0, y: 725)
+        self.cstScrollView.addSubview(scrollView)
         
-        self.scrollView.addSubview(customView1)
-        self.scrollView.addSubview(customView2)
-        self.scrollView.addSubview(customView3)
-        self.scrollView.addSubview(customView4)
-        self.scrollView.addSubview(customView5)
-        self.scrollView.addSubview(customView6)
-        self.scrollView.addSubview(customView7)
-        self.scrollView.addSubview(customView8)
-        self.scrollView.addSubview(customView9)
-        self.scrollView.addSubview(customView10)
-        self.scrollView.addSubview(customView11)
-        self.scrollView.addSubview(customView12)
-        self.scrollView.addSubview(customView13)
+        self.cstScrollView.addSubview(customView1)
+        self.cstScrollView.addSubview(customView2)
+        self.cstScrollView.addSubview(customView3)
+        self.cstScrollView.addSubview(customView4)
+        self.cstScrollView.addSubview(customView5)
+        self.cstScrollView.addSubview(customView6)
+        self.cstScrollView.addSubview(customView7)
+        self.cstScrollView.addSubview(customView8)
+        self.cstScrollView.addSubview(customView9)
+        self.cstScrollView.addSubview(customView10)
+        self.cstScrollView.addSubview(customView11)
+        self.cstScrollView.addSubview(customView12)
+        self.cstScrollView.addSubview(customView13)
+        self.cstScrollView.addSubview(customView14)
 
         
         self.view.addSubview(submitBtn)
-        self.view.addSubview(scrollView)
+        self.view.addSubview(cstScrollView)
         submitBtn.snp_makeConstraints { make in
             make.bottom.equalTo(self.view.snp_bottom).offset(-15)
             make.left.equalTo(self.view.snp_left).offset(50)
             make.size.equalTo(CGSizeMake(SCREEN_WIDTH-100, 35))
         }
         
-        scrollView.snp_makeConstraints { make in
+        cstScrollView.snp_makeConstraints { make in
             make.top.equalTo(self.view.snp_top).offset(64)
             make.left.equalTo(self.view.snp_left)
             make.bottom.equalTo(submitBtn.snp_top).offset(-5)
             make.right.equalTo(self.view.snp_right)
         }
-        
+        self.setZgData()
     }
     
+    func choiceImage(){
+        self.takeImage()
+        customView14.setLineViewHidden()
+    }
 
     var majoris1 = false
     func majortapped1(button:UIButton){
         button.selected = !button.selected
         if button.selected{
             majoris1 = true
-            print("tapped1+\(button.selected)")
         }else{
             majoris1 = false
-            print("tapped1+\(button.selected)")
-            
         }
         
     }
@@ -286,11 +352,8 @@ class MajorHiddenDetailController: PhotoViewController {
         button.selected = !button.selected
         if button.selected{
             majoris2 = true
-            print("tapped2+\(button.selected)")
         }else{
             majoris2 = false
-            print("tapped2+\(button.selected)")
-            
         }
         
     }
@@ -300,28 +363,26 @@ class MajorHiddenDetailController: PhotoViewController {
         button.selected = !button.selected
         if button.selected{
             majoris3 = true
-            print("tapped3+\(button.selected)")
         }else{
             majoris3 = false
-            print("tapped3+\(button.selected)")
         }
     }
+//    
+//    func ChoiceImage(){
+//        customView9.setLineViewHidden()
+//        containerView.hidden = false
+//    }
     
-    func ChoiceImage(){
-        customView9.setLineViewHidden()
-        containerView.hidden = false
-    }
-    
-    func InitPhoto(){
-        setLoc(0, y: 505)
-        var listImageFile = [UIImage]()
-        listImageFile = getListImage()
-        listImageFile.removeAll()
-        checkNeedAddButton()
-        renderView()
-        self.scrollView.addSubview(containerView)
-        containerView.hidden = true
-    }
+//    func InitPhoto(){
+//        setLoc(0, y: 505)
+//        var listImageFile = [UIImage]()
+//        listImageFile = getListImage()
+//        listImageFile.removeAll()
+//        checkNeedAddButton()
+//        renderView()
+//        self.cstScrollView.addSubview(containerView)
+//        containerView.hidden = true
+//    }
     
     func finishTimes(){
         choiceTime { (time) in
@@ -340,8 +401,6 @@ class MajorHiddenDetailController: PhotoViewController {
     }
     
     
-
-    
     func submit(){
         contact = customView1.textField.text!
         if AppTools.isEmpty(contact) {
@@ -350,6 +409,8 @@ class MajorHiddenDetailController: PhotoViewController {
             })
             return
         }
+        lenthLimit("联系人", count: contact.characters.count)
+        
         tel = customView2.textField.text!
         if AppTools.isEmpty(tel) {
             alert("联系电话不可为空", handler: {
@@ -358,13 +419,32 @@ class MajorHiddenDetailController: PhotoViewController {
             return
         }
         
+        if !ValidateEnum.phoneNum(tel).isRight{
+            alert("联系电话格式错误，请重新输入！", handler: {
+                self.customView3.textField.becomeFirstResponder()
+            })
+            return
+        }
+        
+        lenthLimit("联系电话", count: tel.characters.count)
+        
         mobile = customView3.textField.text!
+        
         if AppTools.isEmpty(mobile) {
             alert("手机不可为空", handler: {
                 self.customView3.textField.becomeFirstResponder()
             })
             return
         }
+        lenthLimit("手机", count: mobile.characters.count)
+ 
+        if !ValidateEnum.phoneNum(mobile).isRight{
+            alert("手机号码格式错误，请重新输入！", handler: {
+                self.customView3.textField.becomeFirstResponder()
+            })
+            return
+        }
+       
         hiddendes = customView4.textField.text!
         if AppTools.isEmpty(hiddendes) {
             alert("隐患治理情况不可为空", handler: {
@@ -372,8 +452,6 @@ class MajorHiddenDetailController: PhotoViewController {
             })
             return
         }
-        
-
         
         finishTime = customView8.rightLabel.text!
         if AppTools.isEmpty(finishTime) {
@@ -449,6 +527,9 @@ class MajorHiddenDetailController: PhotoViewController {
             }
         }
     }
+    
+ 
+    
     var contact = ""
     var tel = ""
     var mobile = ""

@@ -40,26 +40,56 @@ init(dict: [String: AnyObject]) {
     super.init()
     self.yhpc_checks = dict["yhpc_checks"] as? String
     
-    self.hzyj_pre_plan = dict["hzyj_pre_plan"] as? Int
+    if dict["hzyj_pre_plan"] != nil{
+        self.hzyj_pre_plan = dict["hzyj_pre_plan"] as? Int
+    }else{
+        self.hzyj_pre_plan = 0
+    }
     self.yhpc_danger_num = dict["yhpc_danger_num"] as? String
     
     self.organization_id = dict["organization_id"] as? Int
-    self.hzyj_team = dict["hzyj_team"] as? Int
+    
+    if dict["hzyj_team"] != nil{
+        self.hzyj_team = dict["hzyj_team"] as? Int
+    }else{
+        self.hzyj_team = 0
+    }
+    
+    
     self.yhpc_money = dict["yhpc_money"] as? String
-    self.hzyj_chemistry_num = dict["hzyj_chemistry_num"] as? Int
+    self.hzyj_chemistry_num = dict["hzyj_chemistry_num"] as? Int ?? 0
     
+    if dict["hzyj_drill"] != nil{
+        self.hzyj_drill = dict["hzyj_drill"] as? Int
+    }else{
+        self.hzyj_drill = 0
+    }
     
-    self.hzyj_drill = dict["hzyj_drill"] as? Int
     self.hzyj_id = dict["hzyj_id"] as? Int
     self.hzyj_train = dict["hzyj_train"] as? Int
     self.organization_num = dict["organization_num"] as? Int
     
     self.yhpc_rollcall_company_num = dict["yhpc_rollcall_company_num"] as? String
-    self.hzyj_material = dict["hzyj_material"] as? Int
     
 
+    if dict["hzyj_material"] != nil{
+        self.hzyj_material = dict["hzyj_material"] as! Int
+    }else{
+        self.hzyj_material = 0
+    }
+    
+//    print(dict["organization_tel"])
+//    print(dict["organization_tel"] as! String)
+//    do{
+//     try self.organization_tel = dict["organization_tel"] as! String
+//    }catch{
+//    self.organization_tel = ""
+//    }
+    
+
+
     if dict["organization_tel"] != nil{
-        self.organization_tel = dict["organization_tel"] as! String
+       self.organization_tel = dict["organization_tel"] as! String
     }else{
         self.organization_tel = ""
     }

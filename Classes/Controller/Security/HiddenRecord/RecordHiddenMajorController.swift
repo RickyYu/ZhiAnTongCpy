@@ -11,7 +11,7 @@ import SnapKit
 import SwiftyJSON
 import UsefulPickerView
 
-class RecordHiddenMajorController: PhotoViewController {
+class RecordHiddenMajorController: SinglePhotoViewController{
      var converyModels : CheckListVo!
      var majorSubmitBtn = UIButton()
      var majorScrollView: UIScrollView!
@@ -44,7 +44,7 @@ class RecordHiddenMajorController: PhotoViewController {
     
     override func viewDidLoad() {
         self.view.backgroundColor = UIColor.whiteColor()
-        self.navigationItem.title = "重大隐患"
+        self.navigationItem.title = "重大隐患录入"
         majorInitPage()
 
         if matterHistoryId != nil{
@@ -58,7 +58,7 @@ class RecordHiddenMajorController: PhotoViewController {
             majorCustomView24.setLabelName("现场图片：")
             majorCustomView24.setRRightLabel("")
             majorCustomView24.addOnClickListener(self, action: #selector(self.majorChoiceImage))
-            majorInitPhoto(1035)
+             setImageViewLoc(0, y: 1045)
             self.majorScrollView.addSubview(majorCustomView21)
             self.majorScrollView.addSubview(majorCustomView24)
         }else{
@@ -68,10 +68,10 @@ class RecordHiddenMajorController: PhotoViewController {
             majorCustomView24.setRRightLabel("")
             majorCustomView24.addOnClickListener(self, action: #selector(self.majorChoiceImage))
             self.majorScrollView.addSubview(majorCustomView24)
-            majorInitPhoto(985)
+            setImageViewLoc(0, y: 1000)
             
         }
-        
+         self.majorScrollView.addSubview(scrollView)
         self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.resignEdit(_:))))
         
     }
@@ -80,6 +80,7 @@ class RecordHiddenMajorController: PhotoViewController {
         if sender.state == .Ended {
             majorCustomView2.textField.resignFirstResponder()
             majorCustomView4.textField.resignFirstResponder()
+            majorCustomView5.textField.resignFirstResponder()
             majorCustomView6.textField.resignFirstResponder()
             majorCustomView7.textField.resignFirstResponder()
             majorCustomView18.textField.resignFirstResponder()
@@ -138,19 +139,9 @@ class RecordHiddenMajorController: PhotoViewController {
     }
     
     func majorChoiceImage(){
+       self.takeImage()
         majorCustomView24.setLineViewHidden()
-        containerView.hidden = false
-    }
-    
-    func majorInitPhoto(y:CGFloat){
-        setLoc(0, y: y)
-        var listImageFile = [UIImage]()
-        listImageFile = getListImage()
-        listImageFile.removeAll()
-        checkNeedAddButton()
-        renderView()
-        self.majorScrollView.addSubview(containerView)
-        containerView.hidden = true
+        
     }
     
     func majorChoicePlanTimes(){
@@ -280,7 +271,7 @@ class RecordHiddenMajorController: PhotoViewController {
         parameters["danger.hzCompany.id"] = converyModels.companyId
         //parameters["danger.noteId"] = notedIdStr
         //市级以上重点企业
-        parameters["danger.emphasisProject"] = String(Int(majorisMagorCpy))
+        parameters["danger.emphasisProject"] = String(majorisMagorCpy)
         //隐患地址
         parameters["danger.dangerAdd"] = majorAddress
         //隐患区域三级
@@ -293,13 +284,13 @@ class RecordHiddenMajorController: PhotoViewController {
         parameters["danger.linkMobile"] = majorMobile
         parameters["danger.description"] = majorHiddenDes
         
-        parameters["danger.govCoordination"] = String(Int(majoris2))
-        parameters["danger.partStopProduct"] = String(Int(majoris3))
-        parameters["danger.fullStopProduct"] = String(Int(majoris4))
-        parameters["danger.target"] = String(Int(majoris5))
-        parameters["danger.resource"] = String(Int(majoris6))
-        parameters["danger.safetyMethod"] = String(Int(majoris7))
-        parameters["danger.goods"] = String(Int(majoris8))
+        parameters["danger.govCoordination"] = String(majoris2)
+        parameters["danger.partStopProduct"] = String(majoris3)
+        parameters["danger.fullStopProduct"] = String(majoris4)
+        parameters["danger.target"] = String(majoris5)
+        parameters["danger.resource"] = String(majoris6)
+        parameters["danger.safetyMethod"] = String(majoris7)
+        parameters["danger.goods"] = String(majoris8)
         
         
         parameters["danger.finishDate"] = majorPlantTime
@@ -312,7 +303,7 @@ class RecordHiddenMajorController: PhotoViewController {
             parameters["danger.safetyMatterHistory.id"] = historyId
         }
         // parameters["file"] = converyModels.companyId
-        NetworkTool.sharedTools.createCompanyDanger(parameters,imageArrays: getListImage()) { (data, error) in
+        NetworkTool.sharedTools.createCompanyDanger(parameters,imageArrays: getTakeImages()) { (data, error) in
             if error == nil{
                 self.showHint("重大隐患添加成功", duration: 1, yOffset: 0)
                 let viewController = self.navigationController?.viewControllers[0] as! SecurityCheckController
@@ -334,102 +325,16 @@ class RecordHiddenMajorController: PhotoViewController {
         
     }
     
-    func submit(){
-        majorAddress = majorCustomView2.textField.text!
-        if AppTools.isEmpty(majorAddress) {
-            alert("隐患地址不可为空", handler: {
-                self.majorCustomView2.textField.becomeFirstResponder()
-            })
-            return
-        }
-        majorPeople = majorCustomView4.textField.text!
-        if AppTools.isEmpty(majorPeople) {
-            alert("联系人不可为空", handler: {
-                self.majorCustomView4.textField.becomeFirstResponder()
-            })
-            return
-        }
-        majorPhone = majorCustomView5.textField.text!
-        if AppTools.isEmpty(majorPhone) {
-            alert("联系电话不可为空", handler: {
-                self.majorCustomView5.textField.becomeFirstResponder()
-            })
-            return
-        }
-        
-        majorMobile = majorCustomView6.textField.text!
-        if AppTools.isEmpty(majorMobile) {
-            alert("手机不可为空", handler: {
-                self.majorCustomView6.textField.becomeFirstResponder()
-            })
-            return
-        }
-        majorHiddenDes = majorCustomView7.textField.text!
-        if AppTools.isEmpty(majorHiddenDes) {
-            alert("隐患基本情况不可为空", handler: {
-                self.majorCustomView7.textField.becomeFirstResponder()
-            })
-            return
-        }
-        
-        majorPlantTime = majorCustomView16.rightLabel.text!
-        if AppTools.isEmpty(majorPlantTime) {
-            alert("计划完成治理时间不可为空", handler: {
-                self.majorCustomView7.textField.becomeFirstResponder()
-            })
-            return
-        }
-        
-        
-        majorGovernMoney = majorCustomView17.textField.text!
-        if AppTools.isEmpty(majorPlantTime) {
-            alert("治理经费不可为空", handler: {
-                self.majorCustomView17.textField.becomeFirstResponder()
-            })
-            return
-        }
-        
-        majorChargePerson = majorCustomView18.textField.text!
-        if AppTools.isEmpty(majorPlantTime) {
-            alert("单位负责人不可为空", handler: {
-                self.majorCustomView18.textField.becomeFirstResponder()
-            })
-            return
-        }
-        majorFillDate = majorCustomView19.rightLabel.text!
-        if AppTools.isEmpty(majorPlantTime) {
-            alert("录入时间不可为空", handler: {
-                
-            })
-            return
-        }
-        
-        majorFillMan = majorCustomView20.textField.text!
-        if AppTools.isEmpty(majorPlantTime) {
-            alert("填报人不可为空", handler: {
-                
-            })
-            return
-        }
-        
-        
-        alertNotice("提示", message: "确认提交后，本次检查信息及隐患无法再更改") {
-            self.submitMajorTrouble()
-        }
-    }
-    
-    
-    
     func majorInitPage(){
         
         
-        majorScrollView = UIScrollView(frame: CGRectMake(0, 0, SCREEN_WIDTH, 1200))
-        majorScrollView!.pagingEnabled = true
+        majorScrollView = UIScrollView(frame: CGRectMake(0, 0, SCREEN_WIDTH, 1150))
+        //majorScrollView!.pagingEnabled = true
         majorScrollView!.scrollEnabled = true
         majorScrollView!.showsHorizontalScrollIndicator = true
         majorScrollView!.showsVerticalScrollIndicator = false
         majorScrollView!.scrollsToTop = true
-        majorScrollView!.contentSize = CGSizeMake(SCREEN_WIDTH, 1200)
+        majorScrollView!.contentSize = CGSizeMake(SCREEN_WIDTH, 1150)
         
         
         majorSubmitBtn.setTitle("保存", forState:.Normal)
@@ -455,6 +360,7 @@ class RecordHiddenMajorController: PhotoViewController {
         majorCustomView2 = DetailCellView(frame:CGRectMake(0, 180, SCREEN_WIDTH, 45))
         majorCustomView2.setLabelName("隐患地址：")
         majorCustomView2.setRTextField( "")
+        majorCustomView2.textField.addTarget(self, action: #selector(self.textDidChange(_:)), forControlEvents: UIControlEvents.EditingChanged)
         
         majorCustomView3 = DetailCellView(frame:CGRectMake(0, 225, SCREEN_WIDTH, 45))
         majorCustomView3.setLabelName("隐患区域：")
@@ -463,21 +369,20 @@ class RecordHiddenMajorController: PhotoViewController {
         majorCustomView3.addOnClickListener(self, action: #selector(self.majorChoiceArea))
         
         
-        
         majorCustomView4 = DetailCellView(frame:CGRectMake(0, 270, SCREEN_WIDTH, 45))
         majorCustomView4.setLabelName("联系人：")
         majorCustomView4.setRTextField( "")
-        
+         majorCustomView4.textField.addTarget(self, action: #selector(self.textDidChange(_:)), forControlEvents: UIControlEvents.EditingChanged)
         
         majorCustomView5 = DetailCellView(frame:CGRectMake(0, 315, SCREEN_WIDTH, 45))
         majorCustomView5.setLabelName("联系电话：")
         majorCustomView5.setRTextField( "")
-        
+         majorCustomView5.textField.addTarget(self, action: #selector(self.textDidChange(_:)), forControlEvents: UIControlEvents.EditingChanged)
         
         majorCustomView6 = DetailCellView(frame:CGRectMake(0, 360, SCREEN_WIDTH, 45))
         majorCustomView6.setLabelName("手机:")
         majorCustomView6.setRTextField( "")
-        
+         majorCustomView6.textField.addTarget(self, action: #selector(self.textDidChange(_:)), forControlEvents: UIControlEvents.EditingChanged)
         
         majorCustomView7 = DetailCellView(frame:CGRectMake(0, 405, SCREEN_WIDTH, 45))
         majorCustomView7.setLabelName("隐患基本情况：")
@@ -539,12 +444,15 @@ class RecordHiddenMajorController: PhotoViewController {
         majorCustomView17 = DetailCellView(frame:CGRectMake(0, 775, SCREEN_WIDTH, 45))
         majorCustomView17.setLabelName("落实治理经费:(单位：万)")
         majorCustomView17.setLabelMax()
+        majorCustomView17.setTextFieldMax()
         majorCustomView17.setRTextField( "")
+        majorCustomView17.textField.keyboardType = .DecimalPad
+     majorCustomView17.textField.delegate = self
         
         majorCustomView18 = DetailCellView(frame:CGRectMake(0, 820, SCREEN_WIDTH, 45))
         majorCustomView18.setLabelName("单位负责人：")
         majorCustomView18.setRTextField( "")
-        
+        majorCustomView18.textField.addTarget(self, action: #selector(self.textDidChange(_:)), forControlEvents: UIControlEvents.EditingChanged)
         
         majorCustomView19 = DetailCellView(frame:CGRectMake(0, 865, SCREEN_WIDTH, 45))
         majorCustomView19.setLabelName("录入时间：")
@@ -556,7 +464,7 @@ class RecordHiddenMajorController: PhotoViewController {
         majorCustomView20 = DetailCellView(frame:CGRectMake(0, 910, SCREEN_WIDTH, 45))
         majorCustomView20.setLabelName("填报人：")
         majorCustomView20.setRTextField( "")
-        
+        majorCustomView20.textField.addTarget(self, action: #selector(self.textDidChange(_:)), forControlEvents: UIControlEvents.EditingChanged)
    
 
         
@@ -653,24 +561,114 @@ class RecordHiddenMajorController: PhotoViewController {
             make.size.equalTo(CGSizeMake(SCREEN_WIDTH-30, 45))
         }
         
-        //        customView8.snp_makeConstraints { make in
-        //            make.top.equalTo(customView7.snp_bottom)
-        //            make.left.equalTo(self.scrollView.snp_left)
-        //            make.size.equalTo(CGSizeMake(SCREEN_WIDTH-30, 45))
-        //        }
-        
-        //        customView9.snp_makeConstraints { make in
-        //            make.top.equalTo(majorCustomView7.snp_bottom)
-        //            make.left.equalTo(self.majorScrollView.snp_left)
-        //            make.size.equalTo(CGSizeMake(SCREEN_WIDTH-30, 45))
-        //        }
-        //
-        //        customView10.snp_makeConstraints { make in
-        //            make.top.equalTo(customView8.snp_bottom)
-        //            make.left.equalTo(self.majorScrollView.snp_left)
-        //            make.size.equalTo(CGSizeMake(SCREEN_WIDTH-30, 45))
-        //        }
-        
+    }
+    
+    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+        return EditTextTools.limitFloat(textField.text!, range: range, string: string)
     }
 
+    func submit(){
+
+        majorAddress = majorCustomView2.textField.text!
+        if AppTools.isEmpty(majorAddress) {
+            alert("隐患地址不可为空", handler: {
+                self.majorCustomView2.textField.becomeFirstResponder()
+            })
+            return
+        }
+        majorPeople = majorCustomView4.textField.text!
+        if AppTools.isEmpty(majorPeople) {
+            alert("联系人不可为空", handler: {
+                self.majorCustomView4.textField.becomeFirstResponder()
+            })
+            return
+        }
+        majorPhone = majorCustomView5.textField.text!
+        if AppTools.isEmpty(majorPhone) {
+            alert("联系电话不可为空", handler: {
+                self.majorCustomView5.textField.becomeFirstResponder()
+            })
+            return
+        }
+        
+        if !ValidateEnum.phoneNum(majorPhone).isRight{
+            alert("联系电话格式错误，请重新输入！", handler: {
+                self.majorCustomView5.textField.becomeFirstResponder()
+            })
+            return
+        }
+        
+        majorMobile = majorCustomView6.textField.text!
+        if AppTools.isEmpty(majorMobile) {
+            alert("手机不可为空", handler: {
+                self.majorCustomView6.textField.becomeFirstResponder()
+            })
+            return
+        }
+        
+        if !ValidateEnum.phoneNum(majorMobile).isRight{
+            alert("手机格式错误，请重新输入！", handler: {
+                self.majorCustomView6.textField.becomeFirstResponder()
+            })
+            return
+        }
+        
+        majorHiddenDes = majorCustomView7.textField.text!
+        if AppTools.isEmpty(majorHiddenDes) {
+            alert("隐患基本情况不可为空", handler: {
+                self.majorCustomView7.textField.becomeFirstResponder()
+            })
+            return
+        }
+        
+        majorPlantTime = majorCustomView16.rightLabel.text!
+        if AppTools.isEmpty(majorPlantTime) {
+            alert("计划完成治理时间不可为空", handler: {
+                self.majorCustomView7.textField.becomeFirstResponder()
+            })
+            return
+        }
+        
+        
+        majorGovernMoney = majorCustomView17.textField.text!
+        if AppTools.isEmpty(majorPlantTime) {
+            alert("治理经费不可为空", handler: {
+                self.majorCustomView17.textField.becomeFirstResponder()
+            })
+            return
+        }
+ 
+        
+        majorChargePerson = majorCustomView18.textField.text!
+        if AppTools.isEmpty(majorPlantTime) {
+            alert("单位负责人不可为空", handler: {
+                self.majorCustomView18.textField.becomeFirstResponder()
+            })
+            return
+        }
+        majorFillDate = majorCustomView19.rightLabel.text!
+        if AppTools.isEmpty(majorPlantTime) {
+            alert("录入时间不可为空", handler: {
+                
+            })
+            return
+        }
+        
+        majorFillMan = majorCustomView20.textField.text!
+        if AppTools.isEmpty(majorPlantTime) {
+            alert("填报人不可为空", handler: {
+                
+            })
+            return
+        }
+        
+        
+        alertNotice("提示", message: "确认提交后，本次检查信息及隐患无法再更改") {
+            self.submitMajorTrouble()
+        }
+    }
+    
+    
+    
+    
 }

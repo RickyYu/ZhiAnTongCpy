@@ -26,7 +26,7 @@ class AddCheckTableController: BaseViewController,UITableViewDataSource,UITableV
     var secCheckModel : SecCheckModel!
     override func viewDidLoad() {
         self.view.backgroundColor = UIColor.whiteColor()
-        self.navigationItem.title = "新增检查表"
+        setNavagation("新增检查表")
         let rightBar = UIBarButtonItem(title: "提交", style: UIBarButtonItemStyle.Done, target: self, action: #selector(self.submit))
         self.navigationItem.rightBarButtonItem = rightBar
         tableView = getTableView()
@@ -52,7 +52,7 @@ class AddCheckTableController: BaseViewController,UITableViewDataSource,UITableV
                 self.showHint("\(error)", duration: 2, yOffset: 0)
                 if error == NOTICE_SECURITY_NAME {
                     self.toLogin()
-                }            }
+                }   }
         }
     
     }
@@ -61,27 +61,36 @@ class AddCheckTableController: BaseViewController,UITableViewDataSource,UITableV
         customView1 = DetailCellView(frame:CGRectMake(0, 64, SCREEN_WIDTH, 45))
         customView1.setLabelName("检查表名称：")
         customView1.setRTextField("")
-        customView1.textField.becomeFirstResponder()
+        
         customView2 = DetailCellView(frame:CGRectMake(0, 110, SCREEN_WIDTH, 145))
         customView2.setLabelName("备注：")
         customView2.setTextViewShow()
-        addBtn = UIButton(frame:CGRectMake(250, 255, 100, 50))
+        //addBtn = UIButton(frame:CGRectMake(250, 255, 70, 40))
+        addBtn = UIButton()
         addBtn.setTitle("新增", forState:.Normal)
         addBtn.backgroundColor = YMGlobalDeapBlueColor()
         addBtn.setTitleColor(UIColor.greenColor(), forState: .Highlighted) //触摸状态下文字的颜色
         addBtn.addTarget(self, action: #selector(self.addCheckItem), forControlEvents: UIControlEvents.TouchUpInside)
+        
+     
+        
         let lineView = UIView(frame:CGRectMake(0, 315, SCREEN_WIDTH,30 ))
         lineView.backgroundColor = YMGlobalDeapBlueColor()
         let label1 = UILabel(frame:CGRectMake(80, 5, 100, 20))
         let label2 = UILabel(frame:CGRectMake(270,5 , 100, 20))
         label1.text = "检查事项"
-        label1.textColor = UIColor.blackColor()
+        label1.textColor = UIColor.whiteColor()
         label2.text = "备注"
-        label2.textColor = UIColor.blackColor()
+        label2.textColor = UIColor.whiteColor()
 
         self.view.addSubview(customView1)
         self.view.addSubview(customView2)
         self.view.addSubview(addBtn)
+        addBtn.snp_makeConstraints { make in
+            make.top.equalTo(self.view.snp_top).offset(260)
+            make.right.equalTo(self.view.snp_right).offset(-20)
+            make.size.equalTo(CGSizeMake(70, 35))
+        }
         self.view.addSubview(tableView)
         lineView.addSubview(label1)
         lineView.addSubview(label2)
@@ -101,12 +110,6 @@ class AddCheckTableController: BaseViewController,UITableViewDataSource,UITableV
     
 
     func submit(){
-        self.alertNotice("提示", message: "是否提交？", handler: {
-           self.submitData()
-        })
-    }
-    
-    func submitData(){
         checkName = customView1.textField.text!
         if AppTools.isEmpty(checkName) {
             alert("检查表名称不可为空!", handler: {
@@ -121,6 +124,20 @@ class AddCheckTableController: BaseViewController,UITableViewDataSource,UITableV
             })
             return
         }
+        
+        if checkDesModels.isEmpty{
+            alert("检查事项不可为空!", handler: {
+                
+            })
+            return
+        }
+        self.alertNotice("提示", message: "是否提交？", handler: {
+            
+           self.submitData()
+        })
+    }
+    
+    func submitData(){
         
         var parameters = [String : AnyObject]()
         //更新时
@@ -205,9 +222,13 @@ class AddCheckTableController: BaseViewController,UITableViewDataSource,UITableV
                                         action in
                                         let checkItem = alertController.textFields!.first! as UITextField
                                         let remark = alertController.textFields!.last! as UITextField
+                                        if checkItem.text == ""{
+                                        self.showHint("检查事项不可为空", duration: 2, yOffset: 2)
+                                        }else {
                                         let model = CheckDesModel(checkDes: checkItem.text!, remark: remark.text!)
                                         self.checkDesModels.append(model)
                                         self.tableView.reloadData()
+                                        }
                                         
         })
         alertController.addAction(cancelAction)

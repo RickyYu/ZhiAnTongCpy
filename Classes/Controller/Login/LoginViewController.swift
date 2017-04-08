@@ -26,7 +26,6 @@ class LoginViewController: BaseViewController{
         super.viewDidLoad()
         self.initPage()
         self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.resignEdit(_:))))
-        
     }
     
     override func resignEdit(sender: UITapGestureRecognizer) {
@@ -41,8 +40,8 @@ class LoginViewController: BaseViewController{
     
     @IBAction func login(sender: UIButton) {
       //  self.reloadData()
-        let userName = userNameField.text!
-        let passWord = passWordField.text!
+        let userName = trimSpace(userNameField.text!)
+        let passWord = trimSpace(passWordField.text!)
      
         if AppTools.isEmpty(userName) {
             alert("请输入您的用户名!", handler: {
@@ -89,9 +88,11 @@ class LoginViewController: BaseViewController{
                 }
             
             }else{
-                self.alert(error!)
+
                 if error == NOTICE_SECURITY_NAME {
                     self.toLogin()
+                 }else{
+                 self.showHint(error!, duration: 2, yOffset: 2)
                 }
             }
         }
@@ -115,9 +116,21 @@ class LoginViewController: BaseViewController{
             passWordField.text=AppTools.loadNSUserDefaultsValue("userPassword") as? String
         }
         userNameField.resignFirstResponder()
+        userNameField.returnKeyType = UIReturnKeyType.Next
+        userNameField.addTarget(self, action: #selector(self.textFieldDidChange(_:)), forControlEvents: .EditingChanged)
         passWordField.resignFirstResponder()
         self.initTextFieldLeftImage()
         
+    }
+    
+    //去除密码
+    func textFieldDidChange(sender:UITextField) {
+        
+        let userNameCount = userNameField.text?.characters.count
+    
+        if userNameCount > 0 {
+           passWordField.text = ""
+        }
     }
     
     ///给控件添加左视图

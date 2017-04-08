@@ -28,6 +28,10 @@ class SecurityCheckController: BaseViewController ,ChartViewDelegate,UIActionShe
 
     }
     
+    override func viewWillAppear(animated: Bool) {
+        self.tabBarController?.tabBar.hidden = false
+    }
+    
     func getCpyInfo(){
         let parameters = [String : AnyObject]()
         NetworkTool.sharedTools.loadCompanyInfo(parameters) { (data, error) in
@@ -136,7 +140,8 @@ class SecurityCheckController: BaseViewController ,ChartViewDelegate,UIActionShe
         
         let sortArray = valuesYh.sort(){ $1 < $0 }
         let leftAxis = chartView.leftAxis
-        leftAxis.axisMaxValue = sortArray[0]
+        //设置y轴数字
+        leftAxis.axisMaxValue = sortArray[0]*1.1
         
         let chartDataSet = BarChartDataSet(yVals: dataEntriesYh, label: "隐患数量")
         let chartDataSet1 = BarChartDataSet(yVals: dataEntriesZg, label: "整改数量")
@@ -158,7 +163,10 @@ class SecurityCheckController: BaseViewController ,ChartViewDelegate,UIActionShe
     }
 
     func refresh(){
-       getData()
+//       getData()
+       self.navigationController?.pushViewController(TestController(), animated: true)
+
+        
     }
     
     func setData(){

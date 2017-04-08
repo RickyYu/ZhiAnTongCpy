@@ -66,7 +66,7 @@ class CpyBaseInfoController: BaseViewController,NSXMLParserDelegate {
     }
     func InitPage(){
         scrollView = UIScrollView(frame: CGRectMake(0, 0, SCREEN_WIDTH, 550))
-        scrollView!.pagingEnabled = true
+        //scrollView!.pagingEnabled = true
         scrollView!.scrollEnabled = true
         scrollView!.showsHorizontalScrollIndicator = true
         scrollView!.showsVerticalScrollIndicator = false

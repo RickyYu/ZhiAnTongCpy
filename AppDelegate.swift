@@ -15,7 +15,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate,BMKGeneralDelegate {
     var window: UIWindow?
     var _mapManager: BMKMapManager?
     
-    
+    func application(application: UIApplication, supportedInterfaceOrientationsForWindow window: UIWindow?) -> UIInterfaceOrientationMask {
+        return UIInterfaceOrientationMask.Portrait
+    }
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         

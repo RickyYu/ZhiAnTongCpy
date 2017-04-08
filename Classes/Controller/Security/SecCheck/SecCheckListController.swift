@@ -46,11 +46,9 @@ class SecCheckListController: BaseTabViewController {
         
     }
     
-
-    
     private func initPage(){
         // 设置navigation
-        self.navigationItem.title = "安全检查"
+       setNavagation("检查表")
         self.navigationController?.navigationBar.hidden = false
          self.hidesBottomBarWhenPushed = true
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "back_white"), style: .Done, target: self, action: #selector(self.back))
@@ -67,6 +65,25 @@ class SecCheckListController: BaseTabViewController {
         initRightBar()
         }
         getDatas()
+    }
+    
+    func deleteDate(id:Int!){
+        var parameters = [String : AnyObject]()
+        parameters["safetyCheck.id"] = String(id)
+        NetworkTool.sharedTools.deleteSafetyCheck(parameters) { (generalCheckInfoModel, error) in
+     
+            if error == nil{
+             self.showHint("删除成功", duration: 1, yOffset: 0)
+            }else{
+                
+                if error == NOTICE_SECURITY_NAME {
+                    self.toLogin()
+                }else{
+                self.showHint("\(error)", duration: 1, yOffset: 0)
+                }
+            }
+        }
+
     }
     
     func getDatas(){
@@ -211,6 +228,16 @@ class SecCheckListController: BaseTabViewController {
         }
     }
     
+    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        if editingStyle == .Delete {
+            secCheckModels.removeAtIndex(indexPath.row)
+            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            deleteDate(secCheckModels[indexPath.row].id)
+        } else if editingStyle == .Insert {
+            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+        }
+    }
+    
     
     // MARK: - 内部控制方法
     /**
@@ -219,6 +246,7 @@ class SecCheckListController: BaseTabViewController {
     func reSet(){
         // 重置当前页
         currentPage = 0
+         totalCount = 0
         // 重置数组
         secCheckModels.removeAll()
         secCheckModels = [SecCheckModel]()

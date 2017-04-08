@@ -14,7 +14,9 @@ class InfoConsulationController: BaseViewController {
          super.viewDidLoad()
        setNavagation("信息资讯")
     }
-    
+    override func viewWillAppear(animated: Bool) {
+        self.tabBarController?.tabBar.hidden = false
+    }
     
     @IBAction func qyzc(sender: AnyObject) {
         let infolist = InfoListController()

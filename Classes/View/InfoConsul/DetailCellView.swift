@@ -9,7 +9,7 @@
 import UIKit
 import SnapKit
 
-class DetailCellView: UIView {
+class DetailCellView: UIView,UITextFieldDelegate {
     
     var lineView = UIView()
     var label = UILabel()
@@ -22,18 +22,34 @@ class DetailCellView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
         label.font = UIFont.boldSystemFontOfSize(13)
         label.frame = CGRectMake(6, 5, 100, 35)
         label.textColor = YMGlobalDeapBlueColor()
-        
+        // 设置 UITextField 的 frame
         textField.frame = CGRectMake(90, 5, SCREEN_WIDTH-80, 35)
+        // 设置 样式 (.none 无边框  .line 直线边框  .roundedRect 圆角矩形边框  .bezel 边线+阴影)
         textField.borderStyle = UITextBorderStyle.None
+        // 设置 文字超出文本框时自适应大小
         textField.adjustsFontSizeToFitWidth=true
+        // 设置 提示字
+//        textField.placeholder = "我是 UITextfield"
+        // 设置 文字颜色   (颜色系统默认为 nil )
+//        textField.textColor = UIColor.blue
+        //设置文字大小
         textField.font = UIFont.boldSystemFontOfSize(13)
+        textField.textAlignment = .Left // 左边对齐
+        //       NSTextAlignment.center   // 居中对齐
+        //        NSTextAlignment.right  // 右对齐
         textField.contentVerticalAlignment = .Center //垂直居中对齐
+        textField.keyboardType = .Default
+        textField.clearButtonMode = .WhileEditing
+        // 设置 文字超出文本框时自适应大小
+        textField.adjustsFontSizeToFitWidth = true
+        // 设置 最小可缩小的字号
+        textField.minimumFontSize = 13
+        textField.delegate = self
         
-        lineView.frame = CGRectMake(3, 42, SCREEN_WIDTH-6, 2)
+        lineView.frame = CGRectMake(3, 42, SCREEN_WIDTH-6, 1)
         lineView.backgroundColor = UIColor.lightGrayColor()
         
         self.addSubview(label)
@@ -51,12 +67,21 @@ class DetailCellView: UIView {
     
     }
     
+    func setTextFieldMax(){
+        textField.frame = CGRectMake(160, 5, SCREEN_WIDTH-80, 35)
+        
+    }
+    
     func setLabelName(name:String) {
         label.text = name
     }
     
     func setRTextField(text:String){
         textField.text = text
+    }
+    func setRTextFieldGray(text:String){
+        textField.text = text
+        textField.textColor = UIColor.lightGrayColor()
     }
     func setRCenterTextField(text:String){
         textField.frame = CGRectMake(160, 5, SCREEN_WIDTH-80, 35)
@@ -67,11 +92,16 @@ class DetailCellView: UIView {
         textView.text = text
     }
     
+    func setRTextViewGray(text:String){
+        textView.textColor = UIColor.grayColor()
+        textView.text = text
+    }
+    
     func setRRightLabel(name:String){
 
         rightLabel.text = name
         rightLabel.font = UIFont.boldSystemFontOfSize(13)
-        rightLabel.frame = CGRectMake(SCREEN_WIDTH-150, 5, 120, 35)
+        rightLabel.frame = CGRectMake(SCREEN_WIDTH-180, 5, 150, 35)
         rightLabel.textColor = UIColor.blackColor()
         
         rightImg  = UIImageView()
@@ -82,10 +112,23 @@ class DetailCellView: UIView {
         self.addSubview(rightImg)
     }
     
+    func setRRightLabelGray(text:String){
+        rightLabel.textColor = UIColor.grayColor()
+        rightLabel.font = UIFont.boldSystemFontOfSize(13)
+        rightLabel.frame = CGRectMake(SCREEN_WIDTH-180, 5, 150, 35)
+        self.addSubview(rightLabel)
+    }
+    
     func setTimeImg(){
        self.rightImg.removeFromSuperview()
        rightImg.image = UIImage(named: "daily_mgr_unselect")
        self.addSubview(rightImg)
+    }
+    
+    func setPhotoImg(){
+        self.rightImg.removeFromSuperview()
+        rightImg.image = UIImage(named: "icon_photo_bg")
+        self.addSubview(rightImg)
     }
     
     func setTextViewShow(){
@@ -119,7 +162,7 @@ class DetailCellView: UIView {
     }
     
     func setRCheckBtn(){
-        rightCheckBtn = UIButton(frame:CGRectMake(SCREEN_WIDTH-40, 5, 35, 35))
+        rightCheckBtn = UIButton(frame:CGRectMake(SCREEN_WIDTH-100, 2.5, 140, 40))
         rightCheckBtn.setImage(UIImage(named: "cb_unselect"), forState: UIControlState.Normal)
         rightCheckBtn.titleLabel!.font = UIFont.boldSystemFontOfSize(11)
         rightCheckBtn.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
@@ -134,9 +177,15 @@ class DetailCellView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
 }
 
-extension DetailCellView {
+
+extension UIView {
     
     func addOnClickListener(target: AnyObject, action: Selector) {
         let gr = UITapGestureRecognizer(target: target, action: action)
@@ -144,5 +193,7 @@ extension DetailCellView {
         userInteractionEnabled = true
         addGestureRecognizer(gr)
     }
+    
+    
     
 }

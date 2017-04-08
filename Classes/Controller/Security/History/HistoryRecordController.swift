@@ -23,11 +23,16 @@ class HistoryRecordController: BaseViewController,UITableViewDelegate,UITableVie
 
     }
     override func viewWillAppear(animated: Bool) {
-        
+        self.tabBarController?.tabBar.hidden = true
+        self.tabBarController?.hidesBottomBarWhenPushed = true
+        self.automaticallyAdjustsScrollViewInsets = false
+
         if (tableView.indexPathForSelectedRow != nil) {
             tableView.deselectRowAtIndexPath(tableView.indexPathForSelectedRow!, animated: true)
         }
     }
+    
+
     
     /**
      section 数量 方法
@@ -73,14 +78,14 @@ class HistoryRecordController: BaseViewController,UITableViewDelegate,UITableVie
     func getTableView() -> UITableView{
         
         if tableView == nil{
-            tableView = UITableView(frame: CGRectMake(0, 0, SCREEN_WIDTH, 270), style: UITableViewStyle.Plain)
+            tableView = UITableView(frame: CGRectMake(0, 64, SCREEN_WIDTH, 270), style: UITableViewStyle.Plain)
             let nib = UINib(nibName: "HistoryRecordCell",bundle: nil)
             self.tableView.registerNib(nib, forCellReuseIdentifier: HistoryRecordCellIdentifier)
             tableView?.delegate = self
             tableView?.dataSource = self
             tableView?.showsHorizontalScrollIndicator = false
             tableView?.showsVerticalScrollIndicator = false
-            
+           tableView?.tableFooterView = UIView()
         }
         
         return tableView!

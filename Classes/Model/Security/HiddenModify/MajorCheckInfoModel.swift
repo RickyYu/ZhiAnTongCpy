@@ -44,7 +44,7 @@ class MajorCheckInfoModel:BaseModel{
     var partStopProduct :Bool!
     var linkTel:String!
     var firstArea:Int!
-    var governMoney:Int!
+    var governMoney:Float!
     
     var fileContents :String!
     var deleted:Bool!
@@ -74,12 +74,35 @@ class MajorCheckInfoModel:BaseModel{
     var num : Int!
     
     var emphasisProject : Bool!
-    
+    var imageInfos = [ImageInfoModel]()
     override init() {
         super.init()
     }
+    
     init(dict: [String: AnyObject]) {
         super.init()
+        initBase(dict)
+    }
+    
+    init(dict: [String: AnyObject],entity:[String: AnyObject]) {
+        super.init()
+        initBase(dict)
+        initImage(entity)
+    }
+    
+    func initImage(entity:[String: AnyObject]){
+        let image = JSON(entity["imagesInfo"]!)
+        if let items = image.arrayObject {
+            for item in items {
+                let homeItem = ImageInfoModel(dict: item as! [String: AnyObject])
+                self.imageInfos.append(homeItem)
+            }
+            
+        }
+    }
+    
+    func initBase(dict: [String: AnyObject]){
+     
         self.govCoordination = dict["govCoordination"] as? Bool
         self.fouthArea = dict["fouthArea"] as? Int
         self.gov = dict["gov"] as? Bool
@@ -113,7 +136,7 @@ class MajorCheckInfoModel:BaseModel{
         self.partStopProduct = dict["partStopProduct"] as? Bool
         self.linkTel = dict["linkTel"] as? String
         self.firstArea = dict["firstArea"] as? Int
-        self.governMoney = dict["governMoney"] as? Int
+        self.governMoney = dict["governMoney"] as? Float
         
         self.fileContents = dict["fileContents"] as? String
         self.deleted = dict["deleted"] as? Bool
@@ -143,8 +166,7 @@ class MajorCheckInfoModel:BaseModel{
             self.emphasisProject = dict["emphasisProject"] as? Bool
         }else{
             self.emphasisProject = false
-         }
-        
+        }
     }
 
 }

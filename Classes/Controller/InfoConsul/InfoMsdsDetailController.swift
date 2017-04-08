@@ -24,12 +24,12 @@ class InfoMsdsDetailController: BaseViewController {
         
     }
     func initPage(){
-        scrollView = UIScrollView(frame: CGRectMake(0, 0, SCREEN_WIDTH, 2650))
-        scrollView!.pagingEnabled = true
+        scrollView = UIScrollView(frame: CGRectMake(0, 64, SCREEN_WIDTH, SCREEN_HEIGHT))
+        //scrollView!.pagingEnabled = true
         scrollView!.scrollEnabled = true
         scrollView!.showsHorizontalScrollIndicator = true
         scrollView!.showsVerticalScrollIndicator = true
-        scrollView!.scrollsToTop = true
+        //scrollView!.scrollsToTop = true
         scrollView!.contentSize = CGSizeMake(SCREEN_WIDTH, 2650)
         
         let customView1 = DetailCellView(frame:CGRectMake(0, 0, SCREEN_WIDTH, 45))
@@ -176,19 +176,6 @@ class InfoMsdsDetailController: BaseViewController {
         let customView36 = DetailCellView(frame:CGRectMake(0, 1575, SCREEN_WIDTH, 45))
         customView36.setLabelName("其他注意事项：")
         customView36.setRMSDSCenterLabel(msdsInfoModel.attentions)
-    
-        
-  
-        
-        
-        
-        
-    
-        
-        
-        
-        
-        
         
         
         self.scrollView!.addSubview(customView1)

@@ -21,10 +21,10 @@ class DetailSecViewCell: UIView {
         super.init(frame: frame)
         label.font = UIFont.boldSystemFontOfSize(11)
         label.frame = CGRectMake(6, 2, 100, 25)
-        label.textColor = UIColor.blackColor()
+        label.textColor = YMGlobalDeapBlueColor()
         
         
-        lineView.frame = CGRectMake(3, 29, SCREEN_WIDTH-6, 2)
+        lineView.frame = CGRectMake(3, 29, SCREEN_WIDTH-6, 1)
         lineView.backgroundColor = UIColor.lightGrayColor()
         
         self.addSubview(label)
@@ -94,13 +94,3 @@ class DetailSecViewCell: UIView {
     }
 }
 
-extension DetailSecViewCell {
-    
-    func addOnClickListener(target: AnyObject, action: Selector) {
-        let gr = UITapGestureRecognizer(target: target, action: action)
-        gr.numberOfTapsRequired = 1
-        userInteractionEnabled = true
-        addGestureRecognizer(gr)
-    }
-    
-}

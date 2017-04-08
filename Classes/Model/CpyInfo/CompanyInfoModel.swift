@@ -42,7 +42,14 @@ class CompanyInfoModel:BaseModel{
         self.thirdArea = dict["thirdArea"] as? Int
         self.companyName = dict["companyName"] as? String
         self.tradeBig = dict["tradeBig"] as? String
-        self.businessRegNumber = dict["businessRegNumber"] as? String
+        let businessRegNumber = dict["businessRegNumber"] as? String!
+        print("mr = \(businessRegNumber)")
+        if (businessRegNumber != nil) {
+            self.businessRegNumber = dict["businessRegNumber"] as? String!
+        }else{
+            self.businessRegNumber = ""
+        }
+
         self.phone = dict["phone"] as? String
         self.tradeSma = dict["tradeSma"] as? String ?? ""
         self.isProduction = dict["isProduction"] as? Bool

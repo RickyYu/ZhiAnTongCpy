@@ -12,8 +12,8 @@ import SwiftyJSON
 
 class MajorHiddenModifyController: PhotoViewController {
     
-     var submitBtn = UIButton()
-     var ScrollView: UIScrollView!
+     //var submitBtn = UIButton()
+     var cstScrollView: UIScrollView!
     //隐患地址
     var address = ""
     //联系人
@@ -52,12 +52,13 @@ class MajorHiddenModifyController: PhotoViewController {
     var customView19  = DetailCellView()
     var customView20  = DetailCellView()
     var customView21  = DetailCellView()
+    var imageArray = [ImageInfoModel]()
     var checkInfoModel: MajorCheckInfoModel!
     var isGorover:String!
     override func viewDidLoad() {
         self.view.backgroundColor = UIColor.whiteColor()
-        self.navigationItem.title = "重大隐患修改"
-        InitPage()
+        self.navigationItem.title = "重大隐患历史记录"
+        initPage()
         getData()
         self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.resignEdit(_:))))
         
@@ -100,18 +101,55 @@ class MajorHiddenModifyController: PhotoViewController {
         }else{
         customView1.rightCheckBtn.selected = false
         }
-        customView2.textField.text = checkInfoModel.dangerAdd
-        customView3.textField.text = "湖州市"+getSecondArea(String(self.checkInfoModel.secondArea))+getThirdArea(String(self.checkInfoModel.thirdArea))
-        customView4.textField.text = checkInfoModel.linkMan
-        customView5.textField.text = checkInfoModel.linkTel
-        customView6.textField.text = checkInfoModel.linkMobile
-        customView7.textField.text = checkInfoModel.descriptions
-        customView16.setRRightLabel(checkInfoModel.finishDate)
+        
+        customView2.textField.enabled = false
+        customView2.textField.enabled = false
+        customView3.textField.enabled = false
+        customView4.textField.enabled = false
+        customView5.textField.enabled = false
+        customView6.textField.enabled = false
+        customView7.textField.enabled = false
+        customView17.textField.enabled = false
+        customView18.textField.enabled = false
+        customView19.textField.enabled = false
+        customView20.textField.enabled = false
+        
+        customView2.setRTextFieldGray(checkInfoModel.dangerAdd)
+        customView3.setRRightLabelGray("湖州市"+getSecondArea(String(self.checkInfoModel.secondArea))+getThirdArea(String(self.checkInfoModel.thirdArea)))
+        customView4.setRTextFieldGray(checkInfoModel.linkMan)
+        customView5.setRTextFieldGray(checkInfoModel.linkTel)
+        customView6.setRTextFieldGray(checkInfoModel.linkMobile)
+        customView7.setRTextFieldGray(checkInfoModel.descriptions)
+        customView16.setRRightLabelGray(checkInfoModel.finishDate)
 
-        customView17.textField.text = String(checkInfoModel.governMoney)
-        customView18.textField.text = checkInfoModel.chargePerson
-        customView19.setRRightLabel(checkInfoModel.fillDate)
-        customView20.textField.text = checkInfoModel.fillMan
+        customView17.setRTextFieldGray(String(checkInfoModel.governMoney))
+        customView18.setRTextFieldGray(checkInfoModel.chargePerson)
+        customView19.setRRightLabelGray(checkInfoModel.fillDate)
+        customView20.setRTextFieldGray(checkInfoModel.fillMan)
+        self.customView21.hidden = true
+        
+        //增加图片
+        if checkInfoModel.fileRealPath != "" {
+            self.customView21.hidden = false
+            self.customView21.setLineViewHidden()
+            let base_path = PlistTools.loadStringValue("BASE_URL_YH")
+            let image = UIImageView(frame: CGRectMake(0, 905, 100, 100))
+            image.kf_setImageWithURL(NSURL(string: base_path+checkInfoModel.fileRealPath)!, placeholderImage: UIImage(named: "icon_photo_bg"))
+            
+            self.cstScrollView.addSubview(image)
+        }
+        
+        
+//        self.imageArray = (checkInfoModel?.imageInfos)!
+//        if  imageArray.count != 0 {
+//        let base_path = PlistTools.loadStringValue("BASE_URL_YH")
+//        for i in 0..<self.imageArray.count{
+//            let x = 70*i+5+5*i
+//            let image = UIImageView(frame: CGRectMake(CGFloat(x), 335, 70, 100))
+//            image.kf_setImageWithURL(NSURL(string: base_path+self.imageArray[i].path)!, placeholderImage: UIImage(named: "image_select"))
+//            self.view.addSubview(image)
+//        }
+//        }
         
         let is9 :Bool = self.checkInfoModel.govCoordination
         let is10 :Bool = self.checkInfoModel.partStopProduct
@@ -167,22 +205,17 @@ class MajorHiddenModifyController: PhotoViewController {
     
     }
 
-    func InitPage(){
+    func initPage(){
         
         
-        ScrollView = UIScrollView(frame: CGRectMake(0, 0, SCREEN_WIDTH, 950))
-        ScrollView!.pagingEnabled = true
-        ScrollView!.scrollEnabled = true
-        ScrollView!.showsHorizontalScrollIndicator = true
-        ScrollView!.showsVerticalScrollIndicator = false
-        ScrollView!.scrollsToTop = true
-        ScrollView!.contentSize = CGSizeMake(SCREEN_WIDTH, 950)
+        cstScrollView = UIScrollView(frame: CGRectMake(0, 0, SCREEN_WIDTH, 1000))
+       // ScrollView!.pagingEnabled = true
+        cstScrollView!.scrollEnabled = true
+        cstScrollView!.showsHorizontalScrollIndicator = true
+        cstScrollView!.showsVerticalScrollIndicator = false
+        cstScrollView!.scrollsToTop = true
+        cstScrollView!.contentSize = CGSizeMake(SCREEN_WIDTH, 1000)
         
-        
-        submitBtn.setTitle("保存", forState:.Normal)
-        submitBtn.backgroundColor = YMGlobalDeapBlueColor()
-        submitBtn.setTitleColor(UIColor.greenColor(), forState: .Highlighted) //触摸状态下文字的颜色
-        submitBtn.addTarget(self, action: #selector(self.submitCheck), forControlEvents: UIControlEvents.TouchUpInside)
         
         customView1 = DetailCellView(frame:CGRectMake(0, 0, SCREEN_WIDTH, 45))
         customView1.backgroundColor = UIColor.whiteColor()
@@ -276,7 +309,7 @@ class MajorHiddenModifyController: PhotoViewController {
         customView16.addOnClickListener(self, action: #selector(self.ChoicePlanTimes))
         
         customView17 = DetailCellView(frame:CGRectMake(0, 685, SCREEN_WIDTH, 45))
-        customView17.setLabelName("落实治理经费:(单位：万)")
+        customView17.setLabelName("落实治理经费:(单位:万)")
         customView17.setLabelMax()
         customView17.setRCenterTextField( "")
         
@@ -299,92 +332,93 @@ class MajorHiddenModifyController: PhotoViewController {
         customView21 = DetailCellView(frame:CGRectMake(0, 865, SCREEN_WIDTH, 45))
         customView21.setLabelName("现场图片：")
         customView21.setRCenterLabel("")
-         customView21.addOnClickListener(self, action: #selector(self.ChoiceImage))
+        // customView21.addOnClickListener(self, action: #selector(self.ChoiceImage))
         
-        InitPhoto()
-        
-        
+      //  initPhoto()
         
         
         
         
-        self.ScrollView.addSubview(customView1)
-        self.ScrollView.addSubview(customView2)
-        self.ScrollView.addSubview(customView3)
-        self.ScrollView.addSubview(customView4)
-        self.ScrollView.addSubview(customView5)
-        self.ScrollView.addSubview(customView6)
-        self.ScrollView.addSubview(customView7)
-        self.ScrollView.addSubview(customView8)
-        self.ScrollView.addSubview(customView9)
-        self.ScrollView.addSubview(customView10)
-        self.ScrollView.addSubview(customView11)
+        
+        
+        self.cstScrollView.addSubview(customView1)
+        self.cstScrollView.addSubview(customView2)
+        self.cstScrollView.addSubview(customView3)
+        self.cstScrollView.addSubview(customView4)
+        self.cstScrollView.addSubview(customView5)
+        self.cstScrollView.addSubview(customView6)
+        self.cstScrollView.addSubview(customView7)
+        self.cstScrollView.addSubview(customView8)
+        self.cstScrollView.addSubview(customView9)
+        self.cstScrollView.addSubview(customView10)
+        self.cstScrollView.addSubview(customView11)
 
-        self.ScrollView.addSubview(customView12)
-        self.ScrollView.addSubview(customView13)
-        self.ScrollView.addSubview(customView14)
-        self.ScrollView.addSubview(customView15)
-        self.ScrollView.addSubview(customView16)
-        self.ScrollView.addSubview(customView17)
-        self.ScrollView.addSubview(customView18)
-        self.ScrollView.addSubview(customView19)
-        self.ScrollView.addSubview(customView20)
-        self.ScrollView.addSubview(customView21)
+        self.cstScrollView.addSubview(customView12)
+        self.cstScrollView.addSubview(customView13)
+        self.cstScrollView.addSubview(customView14)
+        self.cstScrollView.addSubview(customView15)
+        self.cstScrollView.addSubview(customView16)
+        self.cstScrollView.addSubview(customView17)
+        self.cstScrollView.addSubview(customView18)
+        self.cstScrollView.addSubview(customView19)
+        self.cstScrollView.addSubview(customView20)
+        self.cstScrollView.addSubview(customView21)
         
-        self.view.addSubview(submitBtn)
-        self.view.addSubview(ScrollView)
-        submitBtn.snp_makeConstraints { make in
-            make.bottom.equalTo(self.view.snp_bottom).offset(-15)
-            make.left.equalTo(self.view.snp_left).offset(50)
-            make.size.equalTo(CGSizeMake(SCREEN_WIDTH-100, 35))
-        }
+//        self.view.addSubview(submitBtn)
+        self.view.addSubview(cstScrollView)
+//        submitBtn.snp_makeConstraints { make in
+//            make.bottom.equalTo(self.view.snp_bottom).offset(-15)
+//            make.left.equalTo(self.view.snp_left).offset(50)
+//            make.size.equalTo(CGSizeMake(SCREEN_WIDTH-100, 35))
+//        }
+//        submitBtn.hidden = true
         
-        ScrollView.snp_makeConstraints { make in
+        cstScrollView.snp_makeConstraints { make in
             make.top.equalTo(self.view.snp_top).offset(64)
             make.left.equalTo(self.view.snp_left)
-            make.bottom.equalTo(submitBtn.snp_top).offset(-5)
+            make.bottom.equalTo(self.view.snp_bottom)
             make.right.equalTo(self.view.snp_right)
         }
         
         customView1.snp_makeConstraints { make in
-            make.top.equalTo(self.ScrollView.snp_top)
-            make.left.equalTo(self.ScrollView.snp_left)
+            make.top.equalTo(self.cstScrollView.snp_top)
+            make.left.equalTo(self.cstScrollView.snp_left)
             make.size.equalTo(CGSizeMake(SCREEN_WIDTH-30, 45))
         }
         
         customView2.snp_makeConstraints { make in
             make.top.equalTo(customView1.snp_bottom)
-            make.left.equalTo(self.ScrollView.snp_left)
+            make.left.equalTo(self.cstScrollView.snp_left)
             make.size.equalTo(CGSizeMake(SCREEN_WIDTH-30, 45))
         }
         
         customView3.snp_makeConstraints { make in
             make.top.equalTo(customView2.snp_bottom)
-            make.left.equalTo(self.ScrollView.snp_left)
+            make.left.equalTo(self.cstScrollView.snp_left)
             make.size.equalTo(CGSizeMake(SCREEN_WIDTH-30, 45))
         }
         
         customView4.snp_makeConstraints { make in
             make.top.equalTo(customView3.snp_bottom)
-            make.left.equalTo(self.ScrollView.snp_left)
+            make.left.equalTo(self.cstScrollView.snp_left)
             make.size.equalTo(CGSizeMake(SCREEN_WIDTH-30, 45))
         }
         
         customView5.snp_makeConstraints { make in
             make.top.equalTo(customView4.snp_bottom)
-            make.left.equalTo(self.ScrollView.snp_left)
+            make.left.equalTo(self.cstScrollView.snp_left)
             make.size.equalTo(CGSizeMake(SCREEN_WIDTH-30, 45))
         }
         
         customView6.snp_makeConstraints { make in
             make.top.equalTo(customView5.snp_bottom)
-            make.left.equalTo(self.ScrollView.snp_left)
+            make.left.equalTo(self.cstScrollView.snp_left)
             make.size.equalTo(CGSizeMake(SCREEN_WIDTH-30, 45))
         }
         
         customView7.snp_makeConstraints { make in
             make.top.equalTo(customView6.snp_bottom)
-            make.left.equalTo(self.ScrollView.snp_left)
+            make.left.equalTo(self.cstScrollView.snp_left)
             make.size.equalTo(CGSizeMake(SCREEN_WIDTH-30, 45))
         }
         
@@ -396,13 +430,13 @@ class MajorHiddenModifyController: PhotoViewController {
         
         customView9.snp_makeConstraints { make in
             make.top.equalTo(customView7.snp_bottom)
-            make.left.equalTo(self.ScrollView.snp_left)
+            make.left.equalTo(self.cstScrollView.snp_left)
             make.size.equalTo(CGSizeMake(SCREEN_WIDTH-30, 45))
         }
         
         customView10.snp_makeConstraints { make in
             make.top.equalTo(customView8.snp_bottom)
-            make.left.equalTo(self.ScrollView.snp_left)
+            make.left.equalTo(self.cstScrollView.snp_left)
             make.size.equalTo(CGSizeMake(SCREEN_WIDTH-30, 45))
         }
     
@@ -413,14 +447,14 @@ class MajorHiddenModifyController: PhotoViewController {
         containerView.hidden = false
     }
     
-    func InitPhoto(){
+    func initPhoto(){
         setLoc(0, y: 910)
         var listImageFile = [UIImage]()
         listImageFile = getListImage()
         listImageFile.removeAll()
         checkNeedAddButton()
         renderView()
-        self.ScrollView.addSubview(containerView)
+        self.cstScrollView.addSubview(containerView)
         containerView.hidden = true
     }
     
@@ -447,10 +481,8 @@ class MajorHiddenModifyController: PhotoViewController {
         button.selected = !button.selected
         if button.selected{
             isMagorCpy = true
-            print("tapped1+\(button.selected)")
         }else{
             isMagorCpy = false
-            print("tapped1+\(button.selected)")
             
         }
         
@@ -475,11 +507,8 @@ class MajorHiddenModifyController: PhotoViewController {
         button.selected = !button.selected
         if button.selected{
             is3 = true
-            print("tapped1+\(button.selected)")
         }else{
             is3 = false
-            print("tapped1+\(button.selected)")
-            
         }
         
     }
@@ -489,11 +518,8 @@ class MajorHiddenModifyController: PhotoViewController {
         button.selected = !button.selected
         if button.selected{
             is4 = true
-            print("tapped1+\(button.selected)")
         }else{
             is4 = false
-            print("tapped1+\(button.selected)")
-            
         }
         
     }

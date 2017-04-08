@@ -21,6 +21,7 @@ class RecordHideenPassController:BaseViewController {
     override func viewDidLoad() {
         self.view.backgroundColor = UIColor.whiteColor()
         setNavagation(titleName)
+        
         self.hidesBottomBarWhenPushed = true
         let buttonNormal = UIButton(frame:CGRectMake((SCREEN_WIDTH-200)/2, 200, 200, 100))
         buttonNormal.setTitle("一般隐患", forState:.Normal)
@@ -41,6 +42,12 @@ class RecordHideenPassController:BaseViewController {
         if matterHistoryId != nil{
           getCpyInfo()
         }
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        self.tabBarController?.tabBar.hidden = true
+        self.tabBarController?.hidesBottomBarWhenPushed = true
+        self.automaticallyAdjustsScrollViewInsets = false
     }
     
     func getCpyInfo(){

@@ -11,9 +11,10 @@ import SnapKit
 import UsefulPickerView
 import SwiftyJSON
 
-class RecordHiddenNormalController: PhotoViewController {
+class RecordHiddenNormalController: SinglePhotoViewController {
     
     var normalType : String = ""
+    var linkMan:String = ""
     var normalTypeCode : String = ""
     //联系电话
     var telephone : String = ""
@@ -53,7 +54,7 @@ class RecordHiddenNormalController: PhotoViewController {
     
     override func viewDidLoad() {
         self.view.backgroundColor = UIColor.whiteColor()
-        self.navigationItem.title = "一般隐患"
+        setNavagation("一般隐患录入")
         initNormalPageTest()
         if matterHistoryId != nil{
          self.getMatterHistorys()
@@ -67,7 +68,7 @@ class RecordHiddenNormalController: PhotoViewController {
             customView6normal.setLabelName("现场图片：")
             customView6normal.setRRightLabel("")
             customView6normal.addOnClickListener(self, action: #selector(self.choiceNormalImage))
-            initNormalPhoto(615)
+            setImageViewLoc(0, y: 625)
             self.majorScrollView.addSubview(customView14)
             self.majorScrollView.addSubview(customView6normal)
         }else{
@@ -77,12 +78,13 @@ class RecordHiddenNormalController: PhotoViewController {
             customView6normal.setLabelName("现场图片：")
             customView6normal.setRRightLabel("")
             customView6normal.addOnClickListener(self, action: #selector(self.choiceNormalImage))
-            initNormalPhoto(570)
+            setImageViewLoc(0, y: 580)
             self.majorScrollView.addSubview(customView6normal)
         
         
         }
-              self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.resignEdit(_:))))
+        self.majorScrollView.addSubview(scrollView)
+        self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.resignEdit(_:))))
 
     }
     
@@ -131,16 +133,44 @@ class RecordHiddenNormalController: PhotoViewController {
         return ""
     }
     
+    func keyboardWillShow1(notification: NSNotification) {
+        adjustInsetForKeyboardShow(true, notification: notification)
+    }
+    func keyboardWillHide1(notification: NSNotification) {
+        adjustInsetForKeyboardShow(false, notification: notification)
+    }
+    
+    
+    func adjustInsetForKeyboardShow(show:Bool,notification:NSNotification){
+        let userInfo = notification.userInfo ?? [:]
+        let keyboardFrame = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).CGRectValue()
+        let adjustmentHeight = (CGRectGetHeight(keyboardFrame)) * (show ? 1:-1)
+        print("adjustmentHeight = \(adjustmentHeight)")
+        majorScrollView.contentInset.bottom += adjustmentHeight
+        majorScrollView.scrollIndicatorInsets.bottom += adjustmentHeight
+        
+        print("majorScrollView.contentSize.height = \(majorScrollView.contentSize.height)")
+        
+        
+    }
+    
+    
+
+    
     func initNormalPageTest(){
         
+//        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.keyboardWillShow1(_:)), name:UIKeyboardWillShowNotification, object: nil)
+//        //当键盘收起的时候会向系统发出一个通知，
+//        //这个时候需要注册另外一个监听器响应该通知
+//        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.keyboardWillHide1(_:)), name:UIKeyboardWillHideNotification, object: nil)
         
-        majorScrollView = UIScrollView(frame: CGRectMake(0, 0, SCREEN_WIDTH, 800))
-        majorScrollView!.pagingEnabled = true
+        majorScrollView = UIScrollView(frame: CGRectMake(0, 0, SCREEN_WIDTH, 715))
+       // majorScrollView!.pagingEnabled = true
         majorScrollView!.scrollEnabled = true
         majorScrollView!.showsHorizontalScrollIndicator = true
         majorScrollView!.showsVerticalScrollIndicator = false
         majorScrollView!.scrollsToTop = true
-        majorScrollView!.contentSize = CGSizeMake(SCREEN_WIDTH, 800)
+        majorScrollView!.contentSize = CGSizeMake(SCREEN_WIDTH, 715)
         
         submitBtnnormal.setTitle("保存", forState:.Normal)
         submitBtnnormal.backgroundColor = YMGlobalDeapBlueColor()
@@ -162,14 +192,17 @@ class RecordHiddenNormalController: PhotoViewController {
         customView10 = DetailCellView(frame:CGRectMake(0, 180, SCREEN_WIDTH, 45))
         customView10.setLabelName("联系人：")
         customView10.setRTextField( "")
+        customView10.textField.addTarget(self, action: #selector(self.textDidChange(_:)), forControlEvents: UIControlEvents.EditingChanged)
         
         customView11 = DetailCellView(frame:CGRectMake(0, 225, SCREEN_WIDTH, 45))
         customView11.setLabelName("联系电话：")
         customView11.setRTextField( "")
+         customView11.textField.addTarget(self, action: #selector(self.textDidChange(_:)), forControlEvents: UIControlEvents.EditingChanged)
         
         customView12 = DetailCellView(frame:CGRectMake(0, 270, SCREEN_WIDTH, 45))
-        customView12.setLabelName("手机：")
+        customView12.setLabelName("手 机：")
         customView12.setRTextField( "")
+         customView12.textField.addTarget(self, action: #selector(self.textDidChange(_:)), forControlEvents: UIControlEvents.EditingChanged)
         
         customView13 = DetailCellView(frame:CGRectMake(0, 315, SCREEN_WIDTH, 45))
         customView13.setLabelName("工商注册号：")
@@ -239,14 +272,13 @@ class RecordHiddenNormalController: PhotoViewController {
     
     func initNormalPage(){
         
-        
-        majorScrollView = UIScrollView(frame: CGRectMake(0, 0, SCREEN_WIDTH, 1200))
-        majorScrollView!.pagingEnabled = true
+        majorScrollView = UIScrollView(frame: CGRectMake(0, 0, SCREEN_WIDTH, 1000))
+       // majorScrollView!.pagingEnabled = true
         majorScrollView!.scrollEnabled = true
         majorScrollView!.showsHorizontalScrollIndicator = true
         majorScrollView!.showsVerticalScrollIndicator = false
         majorScrollView!.scrollsToTop = true
-        majorScrollView!.contentSize = CGSizeMake(SCREEN_WIDTH, 1201)
+        majorScrollView!.contentSize = CGSizeMake(SCREEN_WIDTH, 1000)
 
         submitBtnnormal.setTitle("保存", forState:.Normal)
         submitBtnnormal.backgroundColor = YMGlobalDeapBlueColor()
@@ -271,12 +303,11 @@ class RecordHiddenNormalController: PhotoViewController {
         
         customView12.setLabelName("手机：")
         customView12.setRTextField( "")
+        customView12.textField.keyboardType = UIKeyboardType.NumberPad
         
         customView13.setLabelName("工商注册号：")
         customView13.setRCenterLabel(converyModels.businessRegNumber)
       
-        
-        
         customView1normal.setLabelName("隐患类别：")
         customView1normal.setRRightLabel("物")
         customView1normal.addOnClickListener(self, action: #selector(self.normalHiddenType))
@@ -406,18 +437,9 @@ class RecordHiddenNormalController: PhotoViewController {
     
     }
    
-    
-    func initNormalPhoto(y:CGFloat){
-        setLoc(0, y: y)
-        checkNeedAddButton()
-        renderView()
-        self.majorScrollView.addSubview(containerView)
-        containerView.hidden = true
-    }
-    
     func choiceNormalImage(){
+        self.takeImage()
         customView6normal.setLineViewHidden()
-        containerView.hidden = false
     }
     
     func normalSubmit(){
@@ -427,6 +449,42 @@ class RecordHiddenNormalController: PhotoViewController {
         normalDes = customView2normal.textField.text!
         telephone = customView11.textField.text!
         mobile = customView12.textField.text!
+        linkMan = customView10.textField.text!
+        
+        if AppTools.isEmpty(linkMan) {
+            alert("联系人不可为空", handler: {
+                self.customView10.textField.becomeFirstResponder()
+            })
+            return
+        }
+        
+        if AppTools.isEmpty(telephone) {
+            alert("联系电话不可为空", handler: {
+                self.customView11.textField.becomeFirstResponder()
+            })
+            return
+        }
+        
+        if !ValidateEnum.phoneNum(telephone).isRight {
+            alert("联系电话格式错误，请重新输入!", handler: {
+                self.customView12.textField.becomeFirstResponder()
+            })
+            return
+        }
+        
+        if AppTools.isEmpty(mobile) {
+            alert("手机号码不可为空", handler: {
+                self.customView12.textField.becomeFirstResponder()
+            })
+            return
+        }
+        if !ValidateEnum.phoneNum(mobile).isRight {
+            alert("手机号码格式错误，请重新输入!", handler: {
+                self.customView12.textField.becomeFirstResponder()
+            })
+            return
+        }
+        
         if AppTools.isEmpty(normalDes) {
             alert("隐患描述不可为空", handler: {
                 self.customView5normal.textField.becomeFirstResponder()
@@ -441,20 +499,6 @@ class RecordHiddenNormalController: PhotoViewController {
             return
         }
         
-        if AppTools.isEmpty(telephone) {
-            alert("联系电话不可为空", handler: {
-                self.customView11.textField.becomeFirstResponder()
-            })
-            return
-        }
-        
-        if AppTools.isEmpty(telephone) {
-            alert("手机号码不可为空", handler: {
-                self.customView12.textField.becomeFirstResponder()
-            })
-            return
-        }
-        
         alertNotice("提示", message: "确认提交后，本次检查信息及隐患无法再更改") {
             self.submitGeneralTrouble()
         }
@@ -465,13 +509,9 @@ class RecordHiddenNormalController: PhotoViewController {
         button.selected = !button.selected
         if button.selected{
             normalIsReform = true
-            print("tapped1+\(button.selected)")
         }else{
             normalIsReform = false
-            print("tapped1+\(button.selected)")
-            
         }
-        
     }
     
     func normalHiddenType(){
@@ -496,21 +536,21 @@ class RecordHiddenNormalController: PhotoViewController {
     //上传一般隐患，等新增上传完毕后上传
     func submitGeneralTrouble(){
         var parameters = [String : AnyObject]()
-        parameters["nomalDanger.companyPassId.id"] = converyModels.companyId
-        parameters["nomalDanger.linkMan"] = converyModels.lxr
+        parameters["nomalDanger.companyPassId"] = converyModels.companyId
+        parameters["nomalDanger.linkMan"] = customView10.textField.text
         parameters["nomalDanger.linkTel"] = telephone
         parameters["nomalDanger.linkMobile"] = mobile
-        parameters["nomalDanger.danger"] = String(Int(true))
+        parameters["nomalDanger.danger"] = String(true)
         parameters["nomalDanger.type"] = normalTypeCode
         parameters["nomalDanger.description"] = normalDes
-        parameters["nomalDanger.repaired"] = String(Int(normalIsReform))
+        parameters["nomalDanger.repaired"] = String(normalIsReform)
         parameters["nomalDanger.rectificationPlanTime"] = normalPlanTime
         if historyId != nil{
            parameters["nomalDanger.safetyMatterHistory.id"] = historyId
         }
         
         
-        NetworkTool.sharedTools.creatNormalDanger(parameters,imageArrays: getListImage()) { (data, error) in
+        NetworkTool.sharedTools.creatNormalDanger(parameters,imageArrays: getTakeImages()) { (data, error) in
             if error == nil{
                 self.showHint("一般隐患添加成功", duration: 1, yOffset: 0)
                 let viewController = self.navigationController?.viewControllers[0] as! SecurityCheckController

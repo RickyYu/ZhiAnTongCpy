@@ -10,13 +10,12 @@ import UsefulPickerView
 
 
 
-class BaseViewController: UIViewController {
+class BaseViewController: UIViewController,UITextFieldDelegate {
     
     var editText : UITextField!
     var editView : UITextView!
     var keyBoardNeedLayout: Bool = true
     override func viewDidLoad() {
-       setNavagation("")
       self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.resignEdit(_:))))
         
 //        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.keyboardWillShow(_:)), name:UIKeyboardWillShowNotification, object: nil)
@@ -26,8 +25,8 @@ class BaseViewController: UIViewController {
 
     }
     
+    
     func keyboardWillShow(notification: NSNotification) {
-        print("show")
         if let userInfo = notification.userInfo,
             value = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue,
             duration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as? Double,
@@ -40,6 +39,8 @@ class BaseViewController: UIViewController {
                                            options: UIViewAnimationOptions(rawValue: curve),
                                            animations: { _ in
                                             self.view.frame = CGRectMake(0,-deltaY,self.view.bounds.width,self.view.bounds.height)
+                                            
+                                            
                                             self.keyBoardNeedLayout = false
                                             self.view.layoutIfNeeded()
                     }, completion: nil)
@@ -48,7 +49,6 @@ class BaseViewController: UIViewController {
     }
     
     func keyboardWillHide(notification: NSNotification) {
-        print("hide")
         if let userInfo = notification.userInfo,
             value = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue,
             duration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as? Double,
@@ -60,12 +60,34 @@ class BaseViewController: UIViewController {
                                        options: UIViewAnimationOptions(rawValue: curve),
                                        animations: { _ in
                                         self.view.frame = CGRectMake(0,deltaY,self.view.bounds.width,self.view.bounds.height)
+                                        
+                                        
                                         self.keyBoardNeedLayout = true
                                         self.view.layoutIfNeeded()
                 }, completion: nil)
         }
     }
+    
 
+    
+    
+    //输入框最大输入限制
+    func textDidChange(sender:UITextField) {
+        let lang = textInputMode?.primaryLanguage
+        if lang == "zh-Hans" {
+            let range = sender.markedTextRange
+            if range == nil {
+                if sender.text?.characters.count >= MAX_INPUT_NUM {
+                    sender.text = sender.text?.substringToIndex((sender.text?.startIndex.advancedBy(MAX_INPUT_NUM))!)
+                }
+            }
+        }
+        else {
+            if sender.text?.characters.count >= MAX_INPUT_NUM {
+                sender.text = sender.text?.substringToIndex((sender.text?.startIndex.advancedBy(MAX_INPUT_NUM))!)
+            }
+        }
+    }
     
     func setNavagation(title:String){
         //修改导航栏按钮颜色为白色
@@ -172,7 +194,7 @@ class BaseViewController: UIViewController {
             handler()
         })
         let acCancel = UIAlertAction(title: "取消", style: UIAlertActionStyle.Cancel) { (UIAlertAction) -> Void in
-            print("click Cancel")
+            
         }
         
         
@@ -182,6 +204,13 @@ class BaseViewController: UIViewController {
         
     }
     
+    //长度提示  name：行名称  count:输入长度
+    func lenthLimit(name:String,count:Int){
+        if count > MAX_INPUT_NUM {
+            alert("\(name))长度不能大于\(MAX_INPUT_NUM)字")
+            return
+        }
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -246,4 +275,30 @@ class BaseViewController: UIViewController {
         })
     }
     
+    //去除HTML标签
+    func trimHtml(text:String)->NSAttributedString{
+        var str = NSAttributedString()
+        do{
+            str = try  NSAttributedString(data: ((text).dataUsingEncoding(NSUnicodeStringEncoding,allowLossyConversion: true)!), options: [NSDocumentTypeDocumentAttribute:NSHTMLTextDocumentType], documentAttributes: nil)
+            return str
+        }catch{
+            return str
+        }
+    }
+    
+    //去除空字符
+    func trimSpace(text:String)->String{
+        //前后空格去除
+        let whiteSpace = NSCharacterSet.whitespaceCharacterSet()
+        return text.stringByTrimmingCharactersInSet(whiteSpace)
+        //        var tempArray = ss.componentsSeparatedByCharactersInSet(whiteSpace)
+        //        tempArray = tempArray.filter($o != "")
+        
+    }
+    
+    
+    deinit{
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    
+    }
 }

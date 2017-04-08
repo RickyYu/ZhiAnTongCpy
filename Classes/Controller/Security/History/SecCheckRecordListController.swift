@@ -9,7 +9,7 @@
 import UIKit
 
 //信息查询列表界面
-private let SecCheckListReuseIdentifier = "SecCheckListReuseIdentifier"
+private let SecCheckListReuseIdentifier = "HistorySecCheckCell"
 class SecCheckRecordListController: BaseTabViewController {
     
     var companyId:String!
@@ -47,10 +47,10 @@ class SecCheckRecordListController: BaseTabViewController {
         self.navigationController?.navigationBar.hidden = false
         self.hidesBottomBarWhenPushed = true
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "back_white"), style: .Done, target: self, action: #selector(self.back))
-        let nib = UINib(nibName: "InfoDemoCell",bundle: nil)
+        let nib = UINib(nibName: SecCheckListReuseIdentifier,bundle: nil)
         self.tableView.registerNib(nib, forCellReuseIdentifier: SecCheckListReuseIdentifier)
         tableView.rowHeight = 53;
-        tableView.separatorStyle = .None
+       // tableView.separatorStyle = .None
         tableView.tableFooterView = UIView()
         // 设置下拉刷新控件
         refreshControl = RefreshControl(frame: CGRectZero)
@@ -147,7 +147,7 @@ class SecCheckRecordListController: BaseTabViewController {
     
     //为表视图单元格提供数据，该方法是必须实现的方法
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(SecCheckListReuseIdentifier, forIndexPath: indexPath) as! InfoDemoCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(SecCheckListReuseIdentifier, forIndexPath: indexPath) as! HistorySecCheckCell
         let count = secCheckRecordModels.count ?? 0
         if count > 0 {
             let info = secCheckRecordModels[indexPath.row]
@@ -203,6 +203,7 @@ class SecCheckRecordListController: BaseTabViewController {
     func reSet(){
         // 重置当前页
         currentPage = 0
+         totalCount = 0
         // 重置数组
         secCheckRecordModels.removeAll()
         secCheckRecordModels = [SecCheckRecordModel]()

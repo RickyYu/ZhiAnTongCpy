@@ -56,7 +56,7 @@ class InfoDemoCell: UITableViewCell {
                 // 设置数据
                 self.infoTitile?.text = art.checkName
                 self.infoSubTitle?.text = art.checkRemark
-                self.time?.text = ""
+                self.time?.text = art.createTime
             }
             
         }

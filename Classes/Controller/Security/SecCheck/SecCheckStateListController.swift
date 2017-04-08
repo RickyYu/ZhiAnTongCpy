@@ -48,10 +48,10 @@ class SecCheckStateListController: BaseTabViewController {
         refreshControl?.addTarget(self, action: #selector(self.getDatas), forControlEvents: .ValueChanged)
         refreshControl?.beginRefreshing()
         if isHistory {
-            self.navigationItem.title = "安全检查历史记录详情"
+            setNavagation("安全检查历史记录详情")
             getHistoryDatas()
         }else{
-            self.navigationItem.title = "安全检查"
+            setNavagation("安全检查")
             let rightBar = UIBarButtonItem(title: "提交", style: UIBarButtonItemStyle.Done, target: self, action: #selector(self.submit))
             self.navigationItem.rightBarButtonItem = rightBar
             getDatas()
@@ -104,8 +104,9 @@ class SecCheckStateListController: BaseTabViewController {
                 
                 }else{//检查项全通过
                 self.showHint("提交成功", duration: 2, yOffset: 0)
-                let viewController = self.navigationController?.viewControllers[0] as! SecurityCheckController
-                self.navigationController?.popToViewController(viewController , animated: true)
+//                let viewController = self.navigationController?.viewControllers[0] as! SecurityCheckController
+//                self.navigationController?.popToViewController(viewController , animated: true)
+                    self.navigationController?.popViewControllerAnimated(true)
                 }
             }else{
                 self.showHint("\(error)", duration: 2, yOffset: 0)
@@ -276,6 +277,7 @@ class SecCheckStateListController: BaseTabViewController {
     func reSet(){
         // 重置当前页
         currentPage = 0
+         totalCount = 0
         // 重置数组
       
             hiddenModels.removeAll()

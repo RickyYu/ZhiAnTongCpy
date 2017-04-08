@@ -54,35 +54,32 @@ class MajorHiddenListController: BaseTabViewController {
         tableView.separatorStyle = .SingleLine
         tableView.tableFooterView = UIView()
         // 设置下拉刷新控件
-        refreshControl = RefreshControl(frame: CGRectZero)
-        refreshControl?.addTarget(self, action: #selector(self.getDatas), forControlEvents: .ValueChanged)
-        refreshControl?.beginRefreshing()
+//        refreshControl = RefreshControl(frame: CGRectZero)
+//        refreshControl?.addTarget(self, action: #selector(self.getDatas), forControlEvents: .ValueChanged)
+//        refreshControl?.beginRefreshing()
         
         getDatas()
     }
     
     func getDatas(){
-        if refreshControl!.refreshing{
-            reSet()
-        }
+//        if refreshControl!.refreshing{
+//            reSet()
+//        }
         var parameters = [String : AnyObject]()
         parameters["company.id"] = companyId
         //三种数据 0,100 ,1
         parameters["danger.isGorver"] = self.isGorover
         parameters["pagination.pageSize"] = PAGE_SIZE
         parameters["pagination.itemCount"] = currentPage
-         parameters["pagination.totalCount"] = totalCount
+        parameters["pagination.totalCount"] = totalCount
         NetworkTool.sharedTools.loadDangers(parameters,pageSize: tempNum) { (secCheckModels, error,totalCount) in
-            // 停止加载数据
-            if self.refreshControl!.refreshing{
-                self.refreshControl!.endRefreshing()
-            }
-            
-           
+        
             if error == nil{
                  self.totalCount = totalCount
                 if self.currentPage>totalCount{
-                    //self.showHint("已经到最后了", duration: 2, yOffset: 0)
+                    if self.toLoadMore {
+                       // self.showHint("已经到最后了", duration: 2, yOffset: 0)
+                    }
                     self.currentPage -= PAGE_SIZE
                     return
                 }
@@ -97,9 +94,11 @@ class MajorHiddenListController: BaseTabViewController {
                 if self.toLoadMore{
                     self.toLoadMore = false
                 }
-                self.showHint("\(error)", duration: 2, yOffset: 0)
+    
                 if error == NOTICE_SECURITY_NAME {
                     self.toLogin()
+                }else {
+                 self.showHint("\(error)", duration: 2, yOffset: 0)
                 }
             }
         }

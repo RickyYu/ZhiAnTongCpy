@@ -16,11 +16,18 @@ class SettingController: BaseViewController {
     @IBOutlet weak var userNameField: UILabel!
     @IBOutlet weak var userCompanyField: UILabel!
     
+    @IBOutlet weak var modify: UIButton!
+    @IBOutlet weak var tel: UIButton!
+    var cpyName:String!
     override func viewDidLoad() {
         super.viewDidLoad()
+        modify.backgroundColor = UIColor.orangeColor()
+        tel.backgroundColor = UIColor.orangeColor()
         let user = AppTools.loadNSUserDefaultsClassValue("user") as! User
+        
         userNameField.text = user.factName as String
-        userCompanyField.text = user.userCompany as String
+        cpyName = user.userCompany as String
+        userCompanyField.text = cpyName
         
     }
     
@@ -29,9 +36,12 @@ class SettingController: BaseViewController {
 //        self.alert("修改密码")
     }
     
+    @IBAction func showCpyName(sender: AnyObject) {
+        self.alert(cpyName)
+    }
 
     @IBAction func callPhone(sender: AnyObject) {
-        let url = NSURL(string: "tel://0574-8736408")
+        let url = NSURL(string: "tel://0574-87364008")
         self.alert("拨号") {
             UIApplication.sharedApplication().openURL(url!)
         }

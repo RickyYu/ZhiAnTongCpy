@@ -51,6 +51,12 @@ class InfoMsdsListController: BaseTabViewController {
         getLawLists()
     }
     
+    override func viewWillAppear(animated: Bool) {
+        self.tabBarController?.tabBar.hidden = true
+        self.tabBarController?.hidesBottomBarWhenPushed = true
+        //        self.automaticallyAdjustsScrollViewInsets = false
+    }
+    
     func getLawLists(){
         if refreshControl!.refreshing{
             reSet()
@@ -188,6 +194,7 @@ class InfoMsdsListController: BaseTabViewController {
     func reSet(){
         // 重置当前页
         currentPage = 0
+         totalCount = 0
         // 重置数组
         mSDSInfoModels.removeAll()
         mSDSInfoModels = [MSDSInfoModel]()

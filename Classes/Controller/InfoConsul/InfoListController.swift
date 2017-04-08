@@ -31,7 +31,7 @@ class InfoListController: BaseTabViewController {
     
     private func initPage(){
         // 设置navigation
-        self.navigationItem.title = self.infoName
+        setNavagation(self.infoName)
         self.navigationController?.navigationBar.hidden = false
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "back_white"), style: .Done, target: self, action: #selector(self.back))
         let nib = UINib(nibName: "InfoDemoCell",bundle: nil)
@@ -45,6 +45,15 @@ class InfoListController: BaseTabViewController {
         refreshControl?.beginRefreshing()
         
         getLawLists()
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        self.tabBarController?.tabBar.hidden = true
+        self.tabBarController?.hidesBottomBarWhenPushed = true
+        //        self.automaticallyAdjustsScrollViewInsets = false
+        if (tableView.indexPathForSelectedRow != nil) {
+            tableView.deselectRowAtIndexPath(tableView.indexPathForSelectedRow!, animated: true)
+        }
     }
     
     func getLawLists(){
@@ -67,7 +76,7 @@ class InfoListController: BaseTabViewController {
             if error == nil{
                 if self.currentPage>totalCount{
                     if self.currentPage > PAGE_SIZE {
-                    self.showHint("已经到最后了", duration: 2, yOffset: 0)
+                    //self.showHint("已经到最后了", duration: 2, yOffset: 0)
                     }
                     self.currentPage -= PAGE_SIZE
                     return
@@ -184,6 +193,7 @@ class InfoListController: BaseTabViewController {
     func reSet(){
         // 重置当前页
         currentPage = 0
+         totalCount = 0
         // 重置数组
         infos.removeAll()
         infos = [Info]()

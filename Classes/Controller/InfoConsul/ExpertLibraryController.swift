@@ -39,12 +39,16 @@ class ExpertLibraryController: BaseViewController,UITableViewDataSource,UITableV
         self.view.backgroundColor = UIColor.whiteColor()
         setNavagation(infoName)
         tableView = getTableView()
-        InitPage()
+        initPage()
         getDatas()
 
     }
     
+
+    
     override func viewWillAppear(animated: Bool) {
+        self.tabBarController?.tabBar.hidden = true
+        self.tabBarController?.hidesBottomBarWhenPushed = true
         if (tableView.indexPathForSelectedRow != nil) {
             tableView.deselectRowAtIndexPath(tableView.indexPathForSelectedRow!, animated: true)
         }
@@ -82,7 +86,7 @@ class ExpertLibraryController: BaseViewController,UITableViewDataSource,UITableV
         
     }
     
-    func InitPage(){
+    func initPage(){
 
         // self.navigationController?.navigationBar.alpha = CGFloat(0.5)
         imgView = UIImageView(frame: CGRectMake(0, 0, SCREEN_WIDTH, 210))
@@ -197,6 +201,7 @@ class ExpertLibraryController: BaseViewController,UITableViewDataSource,UITableV
     func reSet(){
         // 重置当前页
         currentPage = 0
+         totalCount = 0
         // 重置数组
         expertInfoModels.removeAll()
         expertInfoModels = [ExpertInfoModel]()

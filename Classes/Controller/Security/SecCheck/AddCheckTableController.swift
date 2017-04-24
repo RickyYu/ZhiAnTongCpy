@@ -17,6 +17,7 @@ class AddCheckTableController: BaseViewController,UITableViewDataSource,UITableV
     var customView2  = DetailCellView()
     var tableView : UITableView!
     var checkDesModels = [CheckDesModel]()
+    var checkDesModelsDelete = [CheckDesModel]()//删除掉的model
     var companyId:String!
     var addBtn = UIButton()
     var checkName : String!
@@ -31,10 +32,10 @@ class AddCheckTableController: BaseViewController,UITableViewDataSource,UITableV
         self.navigationItem.rightBarButtonItem = rightBar
         tableView = getTableView()
         tableView.hidden = true
-        InitPage()
+        initPage()
         //更新时
         if (secCheckModel != nil){
-        customView1.textField.text = secCheckModel.checkName
+        customView1.textView.text = secCheckModel.checkName
         customView2.textView.text = secCheckModel.checkRemark
         tableView.hidden = false
         getDatas()
@@ -49,18 +50,20 @@ class AddCheckTableController: BaseViewController,UITableViewDataSource,UITableV
                self.checkDesModels = data
                self.tableView.reloadData()
             }else{
-                self.showHint("\(error)", duration: 2, yOffset: 0)
                 if error == NOTICE_SECURITY_NAME {
                     self.toLogin()
-                }   }
+                }else{
+                 self.showHint("\(error)", duration: 2, yOffset: 0)
+                }
+            }
         }
     
     }
     
-    func InitPage(){
+    func initPage(){
         customView1 = DetailCellView(frame:CGRectMake(0, 64, SCREEN_WIDTH, 45))
         customView1.setLabelName("检查表名称：")
-        customView1.setRTextField("")
+        customView1.setMinTextViewShow()
         
         customView2 = DetailCellView(frame:CGRectMake(0, 110, SCREEN_WIDTH, 145))
         customView2.setLabelName("备注：")
@@ -101,7 +104,7 @@ class AddCheckTableController: BaseViewController,UITableViewDataSource,UITableV
     
     override func resignEdit(sender: UITapGestureRecognizer) {
         if sender.state == .Ended {
-            customView1.textField.resignFirstResponder()
+            customView1.textView.resignFirstResponder()
             customView2.textView.resignFirstResponder()
         }
         sender.cancelsTouchesInView = false
@@ -110,10 +113,10 @@ class AddCheckTableController: BaseViewController,UITableViewDataSource,UITableV
     
 
     func submit(){
-        checkName = customView1.textField.text!
+        checkName = customView1.textView.text!
         if AppTools.isEmpty(checkName) {
             alert("检查表名称不可为空!", handler: {
-                self.customView1.textField.becomeFirstResponder()
+                self.customView1.textView.becomeFirstResponder()
             })
             return
         }
@@ -132,7 +135,6 @@ class AddCheckTableController: BaseViewController,UITableViewDataSource,UITableV
             return
         }
         self.alertNotice("提示", message: "是否提交？", handler: {
-            
            self.submitData()
         })
     }
@@ -149,6 +151,38 @@ class AddCheckTableController: BaseViewController,UITableViewDataSource,UITableV
         }
         parameters["safetyCheck.checkName"] = checkName
         parameters["safetyCheck.checkRemark"] = checkRemark
+        for item in checkDesModelsDelete {
+        checkDesModels.append(item)
+        }
+        let tempStr : String = modelToJson(checkDesModels)
+         parameters["result.list"] = tempStr
+        if AppTools.isEmpty(tempStr) {
+            alert("新增检查事项列别不可为空!", handler: {
+                self.customView2.textView.becomeFirstResponder()
+            })
+            return
+        }
+     handleSubmitData(parameters)
+    }
+    
+    func handleSubmitData(parameters:[String : AnyObject]){
+        
+        if (secCheckModel != nil){
+            //更新时
+            NetworkTool.sharedTools.updateSafetyCheck(parameters) { (data, error) in
+                self.handle(error)
+            }
+        }else{
+            //新增时
+            NetworkTool.sharedTools.createSafetyCheck(parameters) { (data, error) in
+                self.handle(error)
+            }
+        }
+        
+    }
+    
+    
+    func modelToJson(checkDesModels:[CheckDesModel])->String{
         var tempStr : String!
         if !checkDesModels.isEmpty{
             var array = [String]()
@@ -162,31 +196,12 @@ class AddCheckTableController: BaseViewController,UITableViewDataSource,UITableV
             }
             let temp = array.joinWithSeparator(",")
             tempStr = "["+temp+"]"
-            print("tempStr = \(tempStr)")
-            parameters["result.list"] = tempStr
-            
         }
-        if AppTools.isEmpty(tempStr) {
-            alert("新增检查事项列别不可为空!", handler: {
-                self.customView2.textView.becomeFirstResponder()
-            })
-            return
-        }
-        if (secCheckModel != nil){
-            //更新时
-            NetworkTool.sharedTools.updateSafetyCheck(parameters) { (data, error) in
-                self.handle(error)
-            }
-        }else{
-            //新增时
-            NetworkTool.sharedTools.createSafetyCheck(parameters) { (data, error) in
-                self.handle(error)
-            }
-        }
-    
-        
-    
+        return tempStr
     }
+    
+    
+
     
     func handle(error:String!){
         if error == nil{
@@ -196,10 +211,10 @@ class AddCheckTableController: BaseViewController,UITableViewDataSource,UITableV
             self.navigationController?.popToViewController(viewController , animated: true)
             
         }else{
-            
-            self.showHint("\(error)", duration: 2, yOffset: 0)
             if error == NOTICE_SECURITY_NAME {
                 self.toLogin()
+            }else {
+              self.showHint("\(error)", duration: 2, yOffset: 0)
             }
         }
     }
@@ -211,7 +226,9 @@ class AddCheckTableController: BaseViewController,UITableViewDataSource,UITableV
         alertController.addTextFieldWithConfigurationHandler {
             (textField: UITextField!) -> Void in
             textField.placeholder = "检查事项"
+            textField.addTarget(self, action: #selector(self.textDidChange(_:)), forControlEvents: UIControlEvents.EditingChanged)
         }
+        
         alertController.addTextFieldWithConfigurationHandler {
             (textField: UITextField!) -> Void in
             textField.placeholder = "备注"
@@ -251,11 +268,15 @@ class AddCheckTableController: BaseViewController,UITableViewDataSource,UITableV
     // Override to support editing the table view.
      func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
+            let checkDesMode:CheckDesModel = checkDesModels[indexPath.row]
+            checkDesMode.deleted = true
+            checkDesModelsDelete.append(checkDesMode)
             checkDesModels.removeAtIndex(indexPath.row)
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
         } else if editingStyle == .Insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
         }
+        print(checkDesModels)
     }
     
     
@@ -286,6 +307,9 @@ class AddCheckTableController: BaseViewController,UITableViewDataSource,UITableV
     //选中时方法
     func tableView(tableView:UITableView, didSelectRowAtIndexPath indexPath:NSIndexPath){
         self.modifyCheckItem(indexPath.row)
+        if (tableView.indexPathForSelectedRow != nil) {
+             tableView.deselectRowAtIndexPath(tableView.indexPathForSelectedRow!, animated: true)
+         }
     }
     
     func modifyCheckItem(row:Int!){
@@ -296,11 +320,14 @@ class AddCheckTableController: BaseViewController,UITableViewDataSource,UITableV
             (textField: UITextField!) -> Void in
             textField.placeholder = "检查事项"
             textField.text = checkDesModel.matterName
+            textField.addTarget(self, action: #selector(self.textDidChange(_:)), forControlEvents: UIControlEvents.EditingChanged)
         }
+        
         alertController.addTextFieldWithConfigurationHandler {
             (textField: UITextField!) -> Void in
             textField.placeholder = "备注"
             textField.text = checkDesModel.matterRemark
+            
         }
         let cancelAction = UIAlertAction(title: "取消", style: UIAlertActionStyle.Cancel, handler: nil)
         let okAction = UIAlertAction(title: "确认", style: UIAlertActionStyle.Default,

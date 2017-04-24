@@ -66,7 +66,7 @@ class RecordHiddenNormalController: SinglePhotoViewController {
             
             customView6normal = DetailCellView(frame:CGRectMake(0, 585, SCREEN_WIDTH, 45))
             customView6normal.setLabelName("现场图片：")
-            customView6normal.setRRightLabel("")
+            customView6normal.setPhotoImg()
             customView6normal.addOnClickListener(self, action: #selector(self.choiceNormalImage))
             setImageViewLoc(0, y: 625)
             self.majorScrollView.addSubview(customView14)
@@ -93,7 +93,7 @@ class RecordHiddenNormalController: SinglePhotoViewController {
             customView10.textField.resignFirstResponder()
             customView11.textField.resignFirstResponder()
             customView12.textField.resignFirstResponder()
-            customView2normal.textField.resignFirstResponder()
+            customView2normal.textView.resignFirstResponder()
         }
         sender.cancelsTouchesInView = false
     }
@@ -216,7 +216,7 @@ class RecordHiddenNormalController: SinglePhotoViewController {
         
         customView2normal = DetailCellView(frame:CGRectMake(0, 405, SCREEN_WIDTH, 45))
         customView2normal.setLabelName("隐患描述：")
-        customView2normal.setRTextField( "")
+        customView2normal.setMinTextViewShow()
         
         customView3normal = DetailCellView(frame:CGRectMake(0, 450, SCREEN_WIDTH, 45))
         customView3normal.setLabelName("计划整改时间：")
@@ -313,7 +313,8 @@ class RecordHiddenNormalController: SinglePhotoViewController {
         customView1normal.addOnClickListener(self, action: #selector(self.normalHiddenType))
         
         customView2normal.setLabelName("隐患描述：")
-        customView2normal.setRTextField( "")
+        customView2normal.setMinTextViewShow()
+
 
         customView3normal.setLabelName("计划整改时间：")
         customView3normal.setRRightLabel("")
@@ -446,7 +447,7 @@ class RecordHiddenNormalController: SinglePhotoViewController {
     
         normalType = customView1normal.rightLabel.text!
         normalTypeCode = getTroubleType(normalType)
-        normalDes = customView2normal.textField.text!
+        normalDes = customView2normal.textView.text!
         telephone = customView11.textField.text!
         mobile = customView12.textField.text!
         linkMan = customView10.textField.text!
@@ -467,7 +468,7 @@ class RecordHiddenNormalController: SinglePhotoViewController {
         
         if !ValidateEnum.phoneNum(telephone).isRight {
             alert("联系电话格式错误，请重新输入!", handler: {
-                self.customView12.textField.becomeFirstResponder()
+                self.customView11.textField.becomeFirstResponder()
             })
             return
         }
@@ -516,7 +517,7 @@ class RecordHiddenNormalController: SinglePhotoViewController {
     
     func normalHiddenType(){
     
-        UsefulPickerView.showSingleColPicker("请选择", data: singleData, defaultSelectedIndex: 0) {[unowned self] (selectedIndex, selectedValue) in
+        UsefulPickerView.showSingleColPicker("请选择", data: singleData, defaultSelectedIndex: 1) {[unowned self] (selectedIndex, selectedValue) in
             self.customView1normal.setRRightLabel(selectedValue)
         }
         

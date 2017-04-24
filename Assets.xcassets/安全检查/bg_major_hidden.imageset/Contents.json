@@ -2,11 +2,12 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "1icon_color_btn_img_jcb.png",
+      "filename" : "02.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
+      "filename" : "bg_major_hidden@2x.png",
       "scale" : "2x"
     },
     {

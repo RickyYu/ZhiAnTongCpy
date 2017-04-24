@@ -375,12 +375,12 @@ class NetworkTool: Alamofire.Manager {
                         
                     }
                     
-                    
                 }else{
                     finished(infos: nil,error: message,totalCount: nil) //success  false
                 }
                 SVProgressHUD.dismiss()
             }else {
+                 SVProgressHUD.dismiss()
                 finished(infos: nil,error: "数据异常",totalCount: nil)
             }
             

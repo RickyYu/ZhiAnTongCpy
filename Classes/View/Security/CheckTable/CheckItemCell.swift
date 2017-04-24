@@ -11,8 +11,7 @@ import UIKit
 class CheckItemCell: UITableViewCell {
     
     @IBOutlet weak var checkDes: UILabel!
-    @IBOutlet weak var remark: UILabel!
-
+    @IBOutlet weak var remark: UITextView!
     
     override func awakeFromNib() {
         super.awakeFromNib()

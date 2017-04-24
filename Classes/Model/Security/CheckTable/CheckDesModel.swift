@@ -14,6 +14,7 @@ class CheckDesModel:BaseModel{
     var id :Int!
     var matterName :String!
     var matterRemark :String!
+    var deleted:Bool!
     init(checkDes:String,remark:String) {
         self.matterName  = checkDes
         self.matterRemark  = remark
@@ -25,13 +26,12 @@ class CheckDesModel:BaseModel{
         self.id = dict["id"] as? Int
         self.matterName = dict["matterName"] as? String
         let mr = dict["matterRemark"] as? String!
-        print("mr = \(mr)")
         if (mr != nil) {
           self.matterRemark = dict["matterRemark"] as? String!
         }else{
           self.matterRemark = ""
         }
-        
+        self.deleted = false
     }
     
     func getParams1() -> Dictionary<String, AnyObject> {
@@ -40,7 +40,7 @@ class CheckDesModel:BaseModel{
          id = -1
         }
         params = [
-            "deleted":false,
+            "deleted":self.deleted,
             "id":self.id,
             "matterName":self.matterName,
             "matterRemark":self.matterRemark,

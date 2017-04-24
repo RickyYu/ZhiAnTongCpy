@@ -331,7 +331,7 @@ class MajorHiddenModifyController: PhotoViewController {
         
         customView21 = DetailCellView(frame:CGRectMake(0, 865, SCREEN_WIDTH, 45))
         customView21.setLabelName("现场图片：")
-        customView21.setRCenterLabel("")
+        customView21.setPhotoImg()
         // customView21.addOnClickListener(self, action: #selector(self.ChoiceImage))
         
       //  initPhoto()

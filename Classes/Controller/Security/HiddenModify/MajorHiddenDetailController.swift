@@ -30,24 +30,16 @@ class MajorHiddenDetailController: SinglePhotoViewController {
     var normalDangerId:String!
     var majorCheckInfoModel:MajorCheckInfoModel!
     var isGorover:String!
+    
     override func viewDidLoad() {
-        customView4.textField.addTarget(self, action:  #selector(self.textDidChange(_:)), forControlEvents: UIControlEvents.EditingChanged)
-        customView10.textField.addTarget(self, action: #selector(self.textDidChange(_:)), forControlEvents: UIControlEvents.EditingChanged)
-        customView11.textField.addTarget(self, action: #selector(self.textDidChange(_:)), forControlEvents: UIControlEvents.EditingChanged)
-        self.view.backgroundColor = UIColor.whiteColor()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.keyboardWillShow(_:)), name:UIKeyboardWillShowNotification, object: nil)
-        //当键盘收起的时候会向系统发出一个通知，
-        //这个时候需要注册另外一个监听器响应该通知
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.keyboardWillHide(_:)), name:UIKeyboardWillHideNotification, object: nil)
+        setNavagation("")
         if isGorover == "1"{
-        //重大隐患整改历史记录
-            setNavagation("重大隐患整改历史记录")
+            self.title = "重大隐患整改历史记录"
             self.initZgPage()
         }else{
-         getData()
+            getData()
         }
         self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.resignEdit(_:))))
-        
     }
     
     override func resignEdit(sender: UITapGestureRecognizer) {
@@ -55,7 +47,7 @@ class MajorHiddenDetailController: SinglePhotoViewController {
             customView1.textField.resignFirstResponder()
             customView2.textField.resignFirstResponder()
             customView3.textField.resignFirstResponder()
-            customView4.textField.resignFirstResponder()
+            customView4.textView.resignFirstResponder()
             customView10.textField.resignFirstResponder()
             customView11.textField.resignFirstResponder()
             customView13.textView.resignFirstResponder()
@@ -74,12 +66,12 @@ class MajorHiddenDetailController: SinglePhotoViewController {
                 self.majorCheckInfoModel = majorCheckInfoModel
                 let isGov:Bool = majorCheckInfoModel.gov
                 if isGov {
-                    self.setNavagation("重大隐患查看")
+                    self.title = "重大隐患查看"
                     self.showHint("政府端录入隐患不能整改", duration: 1, yOffset: 0)
                     self.initViewPage()
                     return
                 }else{
-                    self.setNavagation("重大隐患整改")
+                    self.title = "重大隐患整改"
                     //初始化整改页面
                     self.initZgPage()
                     self.setZgData()
@@ -105,29 +97,33 @@ class MajorHiddenDetailController: SinglePhotoViewController {
         customView1 = DetailCellView(frame:CGRectMake(0, 0, SCREEN_WIDTH, 45))
         customView1.setLabelName("联系人：")
         customView1.setRTextFieldGray(majorCheckInfoModel.linkMan)
-
+        customView1.textField.addTarget(self, action: #selector(self.textDidChange(_:)), forControlEvents: UIControlEvents.EditingChanged)
         
         customView2 = DetailCellView(frame:CGRectMake(0, 45, SCREEN_WIDTH, 45))
         customView2.setLabelName("联系电话：")
         customView2.setRTextFieldGray(majorCheckInfoModel.linkTel)
-        
+        customView2.textField.addTarget(self, action: #selector(self.textDidChange(_:)), forControlEvents: UIControlEvents.EditingChanged)
         
         customView3 = DetailCellView(frame:CGRectMake(0, 90, SCREEN_WIDTH, 45))
         customView3.setLabelName("手机：")
         customView3.setRTextFieldGray(majorCheckInfoModel.linkMobile)
-        
+        customView3.textField.addTarget(self, action: #selector(self.textDidChange(_:)), forControlEvents: UIControlEvents.EditingChanged)
         
         customView4 = DetailCellView(frame:CGRectMake(0, 135, SCREEN_WIDTH, 45))
         customView4.setLabelName("隐患治理情况:")
-        customView4.setRTextFieldGray(majorCheckInfoModel.descriptions)
+        customView4.setMinTextViewShow()
+        customView4.setRTextViewGray(majorCheckInfoModel.descriptions)
+
         
         customView10 = DetailCellView(frame:CGRectMake(0, 180, SCREEN_WIDTH, 45))
         customView10.setLabelName("单位负责人:")
         customView10.setRTextFieldGray(majorCheckInfoModel.chargePerson)
-        
+        customView10.textField.addTarget(self, action: #selector(self.textDidChange(_:)), forControlEvents: UIControlEvents.EditingChanged)
+      
         customView11 = DetailCellView(frame:CGRectMake(0, 225, SCREEN_WIDTH, 45))
         customView11.setLabelName("填表人:")
         customView11.setRTextFieldGray(majorCheckInfoModel.fillMan)
+          customView11.textField.addTarget(self, action: #selector(self.textDidChange(_:)), forControlEvents: UIControlEvents.EditingChanged)
         
         customView13 = DetailCellView(frame:CGRectMake(0, 270, SCREEN_WIDTH, 145))
         customView13.setLabelName("备注：")
@@ -136,7 +132,7 @@ class MajorHiddenDetailController: SinglePhotoViewController {
         customView1.textField.enabled = false
         customView2.textField.enabled = false
         customView3.textField.enabled = false
-        customView4.textField.enabled = false
+        customView4.textView.editable = false
         customView10.textField.enabled = false
         customView11.textField.enabled = false
         customView13.textView.editable = false
@@ -168,7 +164,7 @@ class MajorHiddenDetailController: SinglePhotoViewController {
              customView1.textField.enabled = false
             customView2.textField.enabled = false
             customView3.textField.enabled = false
-            customView4.textField.enabled = false
+            customView4.textView.editable = false
             customView10.textField.enabled = false
             customView11.textField.enabled = false
            
@@ -178,7 +174,7 @@ class MajorHiddenDetailController: SinglePhotoViewController {
             customView2.setRTextFieldGray(majorCheckInfoModel.linkTel)
             customView8.setRRightLabelGray(majorCheckInfoModel.finishDate)
             customView3.setRTextFieldGray(majorCheckInfoModel.linkMobile)
-            customView4.setRTextFieldGray(majorCheckInfoModel.descriptions)
+            customView4.setRTextViewGray(majorCheckInfoModel.descriptions)
             customView10.setRTextFieldGray(majorCheckInfoModel.chargePerson)
             customView12.setRRightLabelGray(majorCheckInfoModel.modifyTime)
             customView11.setRTextFieldGray(majorCheckInfoModel.fillMan)
@@ -189,7 +185,7 @@ class MajorHiddenDetailController: SinglePhotoViewController {
             customView2.setRTextField(majorCheckInfoModel.linkTel)
             customView8.setRRightLabel(majorCheckInfoModel.finishDate)
             customView3.setRTextField(majorCheckInfoModel.linkMobile)
-            customView4.setRTextField(majorCheckInfoModel.descriptions)
+            customView4.setRTextView(majorCheckInfoModel.descriptions)
             customView9.setRTextField(String(format: "%.2f",majorCheckInfoModel.governMoney))
             customView10.setRTextField(majorCheckInfoModel.chargePerson)
             customView12.setRRightLabel(majorCheckInfoModel.modifyTime)
@@ -227,19 +223,23 @@ class MajorHiddenDetailController: SinglePhotoViewController {
         
         customView1 = DetailCellView(frame:CGRectMake(0, 0, SCREEN_WIDTH, 45))
         customView1.setLabelName("联系人：")
+        customView1.textField.addTarget(self, action: #selector(self.textDidChange(_:)), forControlEvents: UIControlEvents.EditingChanged)
         
         
         customView2 = DetailCellView(frame:CGRectMake(0, 45, SCREEN_WIDTH, 45))
         customView2.setLabelName("联系电话：")
+        customView2.textField.addTarget(self, action: #selector(self.textDidChange(_:)), forControlEvents: UIControlEvents.EditingChanged)
         
         
         
         customView3 = DetailCellView(frame:CGRectMake(0, 90, SCREEN_WIDTH, 45))
         customView3.setLabelName("手  机：")
+        customView3.textField.addTarget(self, action: #selector(self.textDidChange(_:)), forControlEvents: UIControlEvents.EditingChanged)
         
         customView4 = DetailCellView(frame:CGRectMake(0, 135, SCREEN_WIDTH, 45))
         customView4.setLabelName("隐患治理情况:")
-        
+        customView4.setMinTextViewShow()
+        customView4.setRTextViewGray(majorCheckInfoModel.descriptions)
         
     
         let customView5 = DetailCellView(frame:CGRectMake(0, 180, SCREEN_WIDTH, 45))
@@ -271,14 +271,16 @@ class MajorHiddenDetailController: SinglePhotoViewController {
         customView9.setLabelMax()
         customView9.setTextFieldMax()
         customView9.setRTextField("")
+        customView9.textField.keyboardType = .DecimalPad
+        customView9.textField.delegate = self
         
         customView10 = DetailCellView(frame:CGRectMake(0, 405, SCREEN_WIDTH, 45))
         customView10.setLabelName("单位负责人:")
-        
+        customView10.textField.addTarget(self, action: #selector(self.textDidChange(_:)), forControlEvents: UIControlEvents.EditingChanged)
         
         customView11 = DetailCellView(frame:CGRectMake(0, 450, SCREEN_WIDTH, 45))
         customView11.setLabelName("填表人:")
-        
+        customView11.textField.addTarget(self, action: #selector(self.textDidChange(_:)), forControlEvents: UIControlEvents.EditingChanged)
         
         customView12 = DetailCellView(frame:CGRectMake(0, 495, SCREEN_WIDTH, 45))
         customView12.setLabelName("填报时间：")
@@ -367,22 +369,6 @@ class MajorHiddenDetailController: SinglePhotoViewController {
             majoris3 = false
         }
     }
-//    
-//    func ChoiceImage(){
-//        customView9.setLineViewHidden()
-//        containerView.hidden = false
-//    }
-    
-//    func InitPhoto(){
-//        setLoc(0, y: 505)
-//        var listImageFile = [UIImage]()
-//        listImageFile = getListImage()
-//        listImageFile.removeAll()
-//        checkNeedAddButton()
-//        renderView()
-//        self.cstScrollView.addSubview(containerView)
-//        containerView.hidden = true
-//    }
     
     func finishTimes(){
         choiceTime { (time) in
@@ -421,7 +407,7 @@ class MajorHiddenDetailController: SinglePhotoViewController {
         
         if !ValidateEnum.phoneNum(tel).isRight{
             alert("联系电话格式错误，请重新输入！", handler: {
-                self.customView3.textField.becomeFirstResponder()
+                self.customView2.textField.becomeFirstResponder()
             })
             return
         }
@@ -445,10 +431,17 @@ class MajorHiddenDetailController: SinglePhotoViewController {
             return
         }
        
-        hiddendes = customView4.textField.text!
+        hiddendes = customView4.textView.text!
         if AppTools.isEmpty(hiddendes) {
             alert("隐患治理情况不可为空", handler: {
-                self.customView4.textField.becomeFirstResponder()
+                self.customView4.textView.becomeFirstResponder()
+            })
+            return
+        }
+        
+        if hiddendes.characters.count>200{
+            alert("隐患治理情况最大输入200字!", handler: {
+                self.customView4.textView.becomeFirstResponder()
             })
             return
         }

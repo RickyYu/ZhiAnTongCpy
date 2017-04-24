@@ -76,7 +76,7 @@ class TestController: SinglePhotoViewController {
 //        return true
 //    }
     
-    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+    override func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
         
         let futureString: NSMutableString = NSMutableString(string: textField.text!)
         futureString.insertString(string, atIndex: range.location)

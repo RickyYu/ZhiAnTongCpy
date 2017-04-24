@@ -95,7 +95,6 @@ class SecurityCheckController: BaseViewController ,ChartViewDelegate,UIActionShe
         //显示左边坐标轴
         chartView.leftAxis.enabled = true
         //图表背景色
-        // chartView.gridBackgroundColor = UIColor.grayColor()
         chartView.backgroundColor = UIColor.lightGrayColor()
         //设置X轴
         let xAxis = chartView.xAxis
@@ -163,8 +162,8 @@ class SecurityCheckController: BaseViewController ,ChartViewDelegate,UIActionShe
     }
 
     func refresh(){
-//       getData()
-       self.navigationController?.pushViewController(TestController(), animated: true)
+       getData()
+//       self.navigationController?.pushViewController(TestController(), animated: true)
 
         
     }

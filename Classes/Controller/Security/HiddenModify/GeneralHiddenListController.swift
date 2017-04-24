@@ -65,21 +65,19 @@ class GeneralHiddenListController: BaseTabViewController {
         tableView.rowHeight = 53;
         tableView.separatorStyle = .SingleLine
         tableView.tableFooterView = UIView()
-        // 设置下拉刷新控件
-//        refreshControl = RefreshControl(frame: CGRectZero)
-//        refreshControl?.addTarget(self, action: #selector(self.getDatas), forControlEvents: .ValueChanged)
-//        refreshControl?.beginRefreshing()
-        
-        getDatas()
+
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+         reSet()
+         getDatas()
     }
     
     func getDatas(){
-//        if refreshControl!.refreshing{
-//            reSet()
-//        }
+
         var parameters = [String : AnyObject]()
-        parameters["company.id"] = companyId
-         parameters["nomalDanger.repair"] = repairId
+        parameters["company.id"] =  AppTools.loadNSUserDefaultsValue("companyId")
+        parameters["nomalDanger.repair"] = repairId
         parameters["pagination.pageSize"] = PAGE_SIZE
         parameters["pagination.itemCount"] = currentPage
         parameters["pagination.totalCount"] = totalCount
@@ -210,6 +208,7 @@ class GeneralHiddenListController: BaseTabViewController {
             let controller = GeneralHiddenDetailController()
             controller.generalCheckInfoModel = object
             controller.isRead = false
+            controller.repairId  = repairId
             self.navigationController?.pushViewController(controller, animated: true)
         default:
             print("error")

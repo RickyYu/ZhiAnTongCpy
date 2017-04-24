@@ -19,6 +19,7 @@ class GeneralHiddenDetailController: SinglePhotoViewController {
     var generalCheckInfoModel:GeneralCheckInfoModel!
     //历史记录入口进入则为true
     var isRead:Bool = false
+    var repairId:String!
     //false 为企业 则能修改  true为政府不能修改
     var isGov = false
     var customView1  = DetailCellView()
@@ -37,7 +38,7 @@ class GeneralHiddenDetailController: SinglePhotoViewController {
         isGov = generalCheckInfoModel.gov
         setNavagation("一般隐患整改")
         if isRead {
-        setNavagation("一般隐患历史记录")
+         setNavagation("一般隐患历史记录")
         }
         initPage()
         //历史记录开始获取
@@ -50,7 +51,7 @@ class GeneralHiddenDetailController: SinglePhotoViewController {
             customView1.textField.resignFirstResponder()
             customView2.textField.resignFirstResponder()
             customView3.textField.resignFirstResponder()
-            customView4.textField.resignFirstResponder()
+            customView4.textView.resignFirstResponder()
             customView8.textView.resignFirstResponder()
         }
         sender.cancelsTouchesInView = false
@@ -75,47 +76,45 @@ class GeneralHiddenDetailController: SinglePhotoViewController {
     }
     
     func setData(){
-        let isGov:Bool = generalCheckInfoModel.gov
-        
-        if isGov || isRead{
-            //政府端
-            let customView10 = DetailCellView(frame:CGRectMake(0, 0, SCREEN_WIDTH, 45))
-            customView10.setLabelName("企业确认整改：")
-            customView10.setLabelMax()
-            customView10.setRCheckBtn()
-            customView10.rightCheckBtn.addTarget(self, action:#selector(majortapped4(_:)), forControlEvents:.TouchUpInside)
-            self.cstScrollView.addSubview(customView10)
-            customView1.frame = CGRectMake(0, 45, SCREEN_WIDTH, 45)
-            customView2.frame = CGRectMake(0, 90, SCREEN_WIDTH, 45)
-            customView3.frame = CGRectMake(0, 135, SCREEN_WIDTH, 45)
-            customView4.frame = CGRectMake(0, 180, SCREEN_WIDTH, 45)
-            customView5.frame = CGRectMake(0, 225, SCREEN_WIDTH, 45)
-            customView6.frame = CGRectMake(0, 270, SCREEN_WIDTH, 45)
-            customView7.frame = CGRectMake(0, 315, SCREEN_WIDTH, 45)
-            customView8.frame = CGRectMake(0, 360, SCREEN_WIDTH, 145)
-            customView9.frame = CGRectMake(0, 505, SCREEN_WIDTH, 45)
+//        let isGov:Bool = generalCheckInfoModel.gov
+        if isRead{
+            
+//            //政府端
+//            if
+//            let customView10 = DetailCellView(frame:CGRectMake(0, 0, SCREEN_WIDTH, 45))
+//            customView10.setLabelName("企业确认整改：")
+//            customView10.setLabelMax()
+//            customView10.setRCheckBtn()
+//            customView10.rightCheckBtn.addTarget(self, action:#selector(majortapped4(_:)), forControlEvents:.TouchUpInside)
+//            self.cstScrollView.addSubview(customView10)
+//            customView1.frame = CGRectMake(0, 45, SCREEN_WIDTH, 45)
+//            customView2.frame = CGRectMake(0, 90, SCREEN_WIDTH, 45)
+//            customView3.frame = CGRectMake(0, 135, SCREEN_WIDTH, 45)
+//            customView4.frame = CGRectMake(0, 180, SCREEN_WIDTH, 45)
+//            customView5.frame = CGRectMake(0, 225, SCREEN_WIDTH, 45)
+//            customView6.frame = CGRectMake(0, 270, SCREEN_WIDTH, 45)
+//            customView7.frame = CGRectMake(0, 315, SCREEN_WIDTH, 45)
+//            customView8.frame = CGRectMake(0, 360, SCREEN_WIDTH, 145)
+//            customView9.frame = CGRectMake(0, 505, SCREEN_WIDTH, 45)
             
             
             customView1.textField.enabled = false
             customView2.textField.enabled = false
             customView3.textField.enabled = false
-            customView4.textField.enabled = false
-//            customView5.textField.enabled = false
+            customView4.textView.editable = false
             customView8.textView.editable = false
-//            customView7.textField.enabled = false
-            customView6.textField.enabled = false
-            submitBtn.hidden = false
+            submitBtn.hidden = true
             customView9.hidden = true
             
             
             customView1.setRTextFieldGray(generalCheckInfoModel.linkMan)
             customView2.setRTextFieldGray(generalCheckInfoModel.linkTel)
             customView3.setRTextFieldGray(generalCheckInfoModel.linkMobile)
-            customView4.setRTextFieldGray(generalCheckInfoModel.descriptions)
+            customView4.setRTextViewGray(generalCheckInfoModel.descriptions)
             customView8.setRTextViewGray(generalCheckInfoModel.remarks)
+            
             customView5.setRRightLabelGray(getTroubleType(String(generalCheckInfoModel.type)))
-            customView6.setRTextFieldGray(generalCheckInfoModel.rectificationPlanTime)
-//            customView7.setRTextFieldGray(generalCheckInfoModel.completedDate)
+            customView6.setRRightLabelGray(generalCheckInfoModel.rectificationPlanTime)
             customView7.setRRightLabelGray(generalCheckInfoModel.completedDate)
             
             //增加图片
@@ -139,9 +138,9 @@ class GeneralHiddenDetailController: SinglePhotoViewController {
             customView1.setRTextField(generalCheckInfoModel.linkMan)
             customView2.setRTextField(generalCheckInfoModel.linkTel)
             customView3.setRTextField(generalCheckInfoModel.linkMobile)
-            customView4.setRTextField(generalCheckInfoModel.descriptions)
+            customView4.setRTextView(generalCheckInfoModel.descriptions)
             customView5.setRRightLabel(getTroubleType(String(generalCheckInfoModel.type)))
-            customView6.setRTextField(generalCheckInfoModel.rectificationPlanTime)
+            customView6.setRRightLabel(generalCheckInfoModel.rectificationPlanTime)
             customView7.setRRightLabel(generalCheckInfoModel.completedDate)
             customView8.setRTextView(generalCheckInfoModel.remarks)
             if generalCheckInfoModel.fileRealPath != "" {
@@ -157,6 +156,7 @@ class GeneralHiddenDetailController: SinglePhotoViewController {
                 })
             }
         }
+
     }
     
     func initPage(){
@@ -166,7 +166,7 @@ class GeneralHiddenDetailController: SinglePhotoViewController {
         cstScrollView!.showsHorizontalScrollIndicator = true
         cstScrollView!.showsVerticalScrollIndicator = false
         cstScrollView!.scrollsToTop = true
-        cstScrollView!.contentSize = CGSizeMake(SCREEN_WIDTH, 605)
+        cstScrollView!.contentSize = CGSizeMake(SCREEN_WIDTH, 635)
         
         submitBtn.setTitle("提交", forState:.Normal)
         submitBtn.backgroundColor = YMGlobalDeapBlueColor()
@@ -186,10 +186,11 @@ class GeneralHiddenDetailController: SinglePhotoViewController {
         
         customView4 = DetailCellView(frame:CGRectMake(0, 135, SCREEN_WIDTH, 45))
         customView4.setLabelName("隐患描述:")
+        customView4.setMinTextViewShow()
         
         
          customView5 = DetailCellView(frame:CGRectMake(0, 180, SCREEN_WIDTH, 45))
-        customView5.setLabelName("隐患类别：")
+         customView5.setLabelName("隐患类别：")
        
 
         customView6 = DetailCellView(frame:CGRectMake(0, 225, SCREEN_WIDTH, 45))
@@ -307,72 +308,35 @@ class GeneralHiddenDetailController: SinglePhotoViewController {
         }
     
         tel = customView2.textField.text!
-//        if AppTools.isEmpty(tel) {
-//            alert("联系电话不可为空", handler: {
-//                self.customView2.textField.becomeFirstResponder()
-//            })
-//            return
-//        }
-//        
-//        if !ValidateEnum.phoneNum(tel).isRight  {
-//            alert("联系电话格式不对", handler: {
-//                self.customView2.textField.becomeFirstResponder()
-//            })
-//            return
-//        }
-        
         mobile = customView3.textField.text!
-//        if AppTools.isEmpty(mobile) {
-//            alert("手机不可为空", handler: {
-//                self.customView3.textField.becomeFirstResponder()
-//            })
-//            return
-//        }
-//        
-//        if !ValidateEnum.phoneNum(mobile).isRight {
-//            alert("手机格式不对", handler: {
-//                self.customView3.textField.becomeFirstResponder()
-//            })
-//            return
-//        }
         lenthLimit("手机", count: mobile.characters.count)
         lenthLimit("联系电话", count: tel.characters.count)
         lenthLimit("联系人", count: contact.characters.count)
         
-        hiddendes = customView4.textField.text!
+        hiddendes = customView4.textView.text!
         if AppTools.isEmpty(hiddendes) {
             alert("隐患描述不可为空", handler: {
-                self.customView4.textField.becomeFirstResponder()
+                self.customView4.textView.becomeFirstResponder()
             })
             return
         }
         
         type = customView5.rightLabel.text!
         
-        planTime = customView6.textField.text!
+        planTime = customView6.rightLabel.text!
         if AppTools.isEmpty(planTime) {
             alert("计划整改时间不可为空", handler: {
-                self.customView4.textField.becomeFirstResponder()
+                self.customView8.textView.becomeFirstResponder()
             })
             return
         }
         
         
         modifyTime = customView7.rightLabel.text!
-//        if AppTools.isEmpty(modifyTime) {
-//            alert("整改时间不可为空", handler: {
-//                self.customView7.textField.becomeFirstResponder()
-//            })
-//            return
-//        }
+
         
         remark = customView8.textView.text!
-//        if AppTools.isEmpty(remark) {
-//            alert("备注不可为空", handler: {
-//                self.customView8.textField.becomeFirstResponder()
-//            })
-//            return
-//        }
+
 
         
         alertNotice("提示", message: "确认提交后，本次检查信息及隐患无法再更改") {
@@ -382,7 +346,7 @@ class GeneralHiddenDetailController: SinglePhotoViewController {
     
     func submitNormalHidden(){
         var parameters = [String : AnyObject]()
-        parameters["deletePhoto"] = "0"
+        parameters["deletePhoto"] = String(false)
         parameters["nomalDanger.companyPassId"] = String(generalCheckInfoModel.companyPassId)
         parameters["nomalDanger.id"] = String(generalCheckInfoModel.id)
         parameters["nomalDanger.linkMan"] = contact
@@ -399,8 +363,10 @@ class GeneralHiddenDetailController: SinglePhotoViewController {
 
         NetworkTool.sharedTools.updateNomalDanger(parameters,imageArrays: getTakeImages()) { (data, error) in
             if error == nil{
-                self.showHint("一般隐患修改成功", duration: 1, yOffset: 0)
-                let viewController = self.navigationController?.viewControllers[0] as! SecurityCheckController
+                self.showHint("一般隐患整改成功", duration: 1, yOffset: 0)
+                let viewController = self.navigationController?.viewControllers[2] as! GeneralHiddenListController
+                viewController.repairId = self.repairId
+//                viewController.companyId = 
                 // viewController.isRefresh = true
                 self.navigationController?.popToViewController(viewController , animated: true)
                 

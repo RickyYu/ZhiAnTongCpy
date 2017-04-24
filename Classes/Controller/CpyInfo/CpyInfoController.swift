@@ -34,6 +34,7 @@ class CpyInfoController: BaseViewController,LocationParameterDelegate  {
         }
     }
     var topLayerOriX:CGFloat = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setNavagation("企业信息")
@@ -58,7 +59,7 @@ class CpyInfoController: BaseViewController,LocationParameterDelegate  {
         let x = CGFloat(self.viewControllers.count)
         self.scrollView.contentSize = CGSizeMake(SCREEN_WIDTH*x,SCREEN_HEIGHT-64)
         //        self.scrollView.contentOffset = CGPointMake(0,0)
-        //self.scrollView.pagingEnabled = true
+        self.scrollView.pagingEnabled = true
         self.scrollView.delegate = self
         var originX = (SCREEN_WIDTH - x*topItemWid)/3
         topLayerOriX = originX+40
@@ -92,7 +93,10 @@ class CpyInfoController: BaseViewController,LocationParameterDelegate  {
         }
         selectedItem = 0
     }
-
+    override func viewWillAppear(animated: Bool) {
+        self.tabBarController?.tabBar.hidden = false
+    }
+    
     @IBAction func toLocation(sender: AnyObject) {
         let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("LocationSaveController") as! LocationSaveController
         controller.companyId = AppTools.loadNSUserDefaultsValue("companyId") as! String

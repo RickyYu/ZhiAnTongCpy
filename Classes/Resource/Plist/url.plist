@@ -2,10 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key></key>
-	<string></string>
-	<key>New item - 3</key>
-	<string></string>
 	<key>企业端接口</key>
 	<string></string>
 	<key>DELETE_SAFETY_CHECK</key>
@@ -42,10 +38,6 @@
 	<string>/appDanger/nosecuritycheck/loadProDangers.xhtml</string>
 	<key>LOAD_COUNT_COM</key>
 	<string>/appDanger/nosecuritycheck/loadCountCom.xhtml</string>
-	<key>BASE_URL_DA-t</key>
-	<string>http://192.168.2.110:7091/huzhouArchives</string>
-	<key>BASE_URL_DA</key>
-	<string>http://192.168.2.213:8080/huzhouArchives</string>
 	<key>CREATE_COMPANY_DANGER</key>
 	<string>/appDanger/nosecuritycheck/createCompanyDanger.xhtml</string>
 	<key>UPDATE_COMPANY_DANGER</key>
@@ -57,7 +49,19 @@
 	<key>LOAD_CPY_NORMALDANGER</key>
 	<string>/appNomalDanger/nosecuritycheck/loadNomalDanger.xhtml</string>
 	<key>BASE_URL_DA-</key>
+	<string>http://192.168.2.110:7091/huzhouArchives</string>
+	<key>BASE_URL_DA</key>
 	<string>http://192.168.2.224:8022/huzhouArchives</string>
+	<key>BASE_URL_DA---</key>
+	<string>http://192.168.2.213:8080/huzhouArchives</string>
+	<key>BASE_URL_YH-</key>
+	<string>http://192.168.2.110:7090/huzhou</string>
+	<key>BASE_URL_YH---</key>
+	<string>http://192.168.2.213:8080/huzhou</string>
+	<key>BASE_URL_YH</key>
+	<string>http://192.168.2.224:8029/huzhou</string>
+	<key>New item</key>
+	<string>BASE_URL_DA---</string>
 	<key>CREATE_PRODUCE_CALLBACK</key>
 	<string>/appProduceLocaleNote/nosecuritycheck/createProduceCallBack.xhtml</string>
 	<key>LOGIN</key>
@@ -92,10 +96,6 @@
 	<string>/appCheckRecord/nosecuritycheck/loadCheckRecord.xhtml</string>
 	<key>LOAD_MATTER_HISTORY_LIST</key>
 	<string>/appSafety/nosecuritycheck/loadMatterHistoryList.xhtml</string>
-	<key>BASE_URL_YH-t</key>
-	<string>http://192.168.2.110:7090/huzhou</string>
-	<key>BASE_URL_YH</key>
-	<string>http://192.168.2.213:8080/huzhou</string>
 	<key>LOAD_PRODUCE_CALLBACKS</key>
 	<string>/appProduceLocaleNote/nosecuritycheck/loadProduceCallBacks.xhtml</string>
 	<key>CREATE_DANGER_GORVER</key>
@@ -116,8 +116,6 @@
 	<string>/appDangerGorver/nosecuritycheck/createDangerGorverInit.xhtml</string>
 	<key>LOAD_HISTORY_PRODUCE</key>
 	<string>/appProduceLocaleNote/nosecuritycheck/loadHistoryProduceCallBacks.xhtml</string>
-	<key>BASE_URL_YH-</key>
-	<string>http://192.168.2.224:8029/huzhou</string>
 	<key>GET_COMPANY_GRID</key>
 	<string>/appCheckRecord/nosecuritycheck/loadCompanyGrid.xhtml</string>
 	<key>LOAD_SAFETY</key>

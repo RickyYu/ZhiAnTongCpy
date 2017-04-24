@@ -25,6 +25,9 @@ class BaseViewController: UIViewController,UITextFieldDelegate {
 
     }
     
+    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+        return EditTextTools.limitFloat(textField.text!, range: range, string: string)
+    }
     
     func keyboardWillShow(notification: NSNotification) {
         if let userInfo = notification.userInfo,
@@ -90,13 +93,14 @@ class BaseViewController: UIViewController,UITextFieldDelegate {
     }
     
     func setNavagation(title:String){
+        self.view.backgroundColor = UIColor.whiteColor()
         //修改导航栏按钮颜色为白色
         self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
         //修改导航栏文字颜色
         self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
         //修改导航栏背景颜色
         self.navigationController?.navigationBar.barTintColor = YMGlobalBlueColor()
-        self.view.backgroundColor = UIColor.whiteColor()
+        
         //修改导航栏按钮返回只有箭头
         let item = UIBarButtonItem(title: "", style: .Plain, target: self, action: nil)
         self.navigationItem.backBarButtonItem = item;

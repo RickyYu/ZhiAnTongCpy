@@ -39,10 +39,6 @@ class InfoListController: BaseTabViewController {
         tableView.rowHeight = 53;
         tableView.separatorStyle = .None
         tableView.tableFooterView = UIView()
-        // 设置下拉刷新控件
-        refreshControl = RefreshControl(frame: CGRectZero)
-        refreshControl?.addTarget(self, action: #selector(InfoListController.getLawLists), forControlEvents: .ValueChanged)
-        refreshControl?.beginRefreshing()
         
         getLawLists()
     }
@@ -50,16 +46,12 @@ class InfoListController: BaseTabViewController {
     override func viewWillAppear(animated: Bool) {
         self.tabBarController?.tabBar.hidden = true
         self.tabBarController?.hidesBottomBarWhenPushed = true
-        //        self.automaticallyAdjustsScrollViewInsets = false
         if (tableView.indexPathForSelectedRow != nil) {
             tableView.deselectRowAtIndexPath(tableView.indexPathForSelectedRow!, animated: true)
         }
     }
     
     func getLawLists(){
-        if refreshControl!.refreshing{
-            reSet()
-        }
         var parameters = [String : AnyObject]()
         parameters["code"] = self.infoType
         parameters["pagination.pageSize"] = PAGE_SIZE
@@ -67,11 +59,6 @@ class InfoListController: BaseTabViewController {
         parameters["pagination.totalCount"] = totalCount
         
         NetworkTool.sharedTools.getLawInfoList(parameters) { (infos, error,totalCount) in
-            // 停止加载数据
-            if self.refreshControl!.refreshing{
-                self.refreshControl!.endRefreshing()
-            }
-            
  
             if error == nil{
                 if self.currentPage>totalCount{
@@ -86,15 +73,16 @@ class InfoListController: BaseTabViewController {
                 self.infos += infos!
                 self.tableView.reloadData()
             }else{
-                
                 // 获取数据失败后
                 self.currentPage -= PAGE_SIZE
                 if self.toLoadMore{
                     self.toLoadMore = false
                 }
-                self.showHint("\(error)", duration: 2, yOffset: 0)
+                
                 if error == NOTICE_SECURITY_NAME {
                     self.toLogin()
+                }else{
+                self.showHint("\(error)", duration: 2, yOffset: 0)
                 }
             }
         }
@@ -135,7 +123,7 @@ class InfoListController: BaseTabViewController {
             let info = infos[indexPath.row]
             cell.info = info
         }
-        if count > 0 && indexPath.row == count-1 && !toLoadMore{
+        if count > 0 && indexPath.row == count-1 && !toLoadMore && totalCount>PAGE_SIZE{
             toLoadMore = true
             currentPage += PAGE_SIZE
             getLawLists()

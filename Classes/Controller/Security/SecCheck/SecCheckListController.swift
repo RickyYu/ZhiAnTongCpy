@@ -101,7 +101,7 @@ class SecCheckListController: BaseTabViewController {
                 self.refreshControl!.endRefreshing()
             }
             if error == nil{
-                
+                self.totalCount = totalCount
                 if totalCount == 0{
                     self.alertNotice("提示", message: "请先创建检查表，是否现在添加？", handler: {
                        //createTable
@@ -180,7 +180,7 @@ class SecCheckListController: BaseTabViewController {
             let info = secCheckModels[indexPath.row]
             cell.secCheckModel = info
         }
-        if count > 0 && indexPath.row == count-1 && !toLoadMore{
+        if count > 0 && indexPath.row == count-1 && !toLoadMore && self.totalCount > PAGE_SIZE {
             toLoadMore = true
             currentPage += PAGE_SIZE
             getDatas()

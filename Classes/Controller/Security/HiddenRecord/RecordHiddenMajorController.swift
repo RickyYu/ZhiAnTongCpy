@@ -43,8 +43,7 @@ class RecordHiddenMajorController: SinglePhotoViewController{
     var majorCustomView24  = DetailCellView()
     
     override func viewDidLoad() {
-        self.view.backgroundColor = UIColor.whiteColor()
-        self.navigationItem.title = "重大隐患录入"
+       setNavagation("重大隐患录入")
         majorInitPage()
 
         if matterHistoryId != nil{
@@ -56,7 +55,7 @@ class RecordHiddenMajorController: SinglePhotoViewController{
             
             majorCustomView24 = DetailCellView(frame:CGRectMake(0, 1000, SCREEN_WIDTH, 45))
             majorCustomView24.setLabelName("现场图片：")
-            majorCustomView24.setRRightLabel("")
+            majorCustomView24.setPhotoImg()
             majorCustomView24.addOnClickListener(self, action: #selector(self.majorChoiceImage))
              setImageViewLoc(0, y: 1045)
             self.majorScrollView.addSubview(majorCustomView21)
@@ -65,7 +64,7 @@ class RecordHiddenMajorController: SinglePhotoViewController{
 
             majorCustomView24 = DetailCellView(frame:CGRectMake(0, 955, SCREEN_WIDTH, 45))
             majorCustomView24.setLabelName("现场图片：")
-            majorCustomView24.setRRightLabel("")
+            majorCustomView24.setPhotoImg()
             majorCustomView24.addOnClickListener(self, action: #selector(self.majorChoiceImage))
             self.majorScrollView.addSubview(majorCustomView24)
             setImageViewLoc(0, y: 1000)
@@ -447,7 +446,7 @@ class RecordHiddenMajorController: SinglePhotoViewController{
         majorCustomView17.setTextFieldMax()
         majorCustomView17.setRTextField( "")
         majorCustomView17.textField.keyboardType = .DecimalPad
-     majorCustomView17.textField.delegate = self
+         majorCustomView17.textField.delegate = self
         
         majorCustomView18 = DetailCellView(frame:CGRectMake(0, 820, SCREEN_WIDTH, 45))
         majorCustomView18.setLabelName("单位负责人：")
@@ -563,9 +562,7 @@ class RecordHiddenMajorController: SinglePhotoViewController{
         
     }
     
-    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
-        return EditTextTools.limitFloat(textField.text!, range: range, string: string)
-    }
+
 
     func submit(){
 

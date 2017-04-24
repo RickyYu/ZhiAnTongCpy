@@ -9,7 +9,7 @@
 import UIKit
 import SnapKit
 
-class DetailCellView: UIView,UITextFieldDelegate {
+class DetailCellView: UIView,UITextFieldDelegate,UITextViewDelegate {
     
     var lineView = UIView()
     var label = UILabel()
@@ -26,7 +26,7 @@ class DetailCellView: UIView,UITextFieldDelegate {
         label.frame = CGRectMake(6, 5, 100, 35)
         label.textColor = YMGlobalDeapBlueColor()
         // 设置 UITextField 的 frame
-        textField.frame = CGRectMake(90, 5, SCREEN_WIDTH-80, 35)
+        textField.frame = CGRectMake(90, 5, SCREEN_WIDTH-90, 35)
         // 设置 样式 (.none 无边框  .line 直线边框  .roundedRect 圆角矩形边框  .bezel 边线+阴影)
         textField.borderStyle = UITextBorderStyle.None
         // 设置 文字超出文本框时自适应大小
@@ -95,6 +95,7 @@ class DetailCellView: UIView,UITextFieldDelegate {
     func setRTextViewGray(text:String){
         textView.textColor = UIColor.grayColor()
         textView.text = text
+        textView.editable = false
     }
     
     func setRRightLabel(name:String){
@@ -113,6 +114,7 @@ class DetailCellView: UIView,UITextFieldDelegate {
     }
     
     func setRRightLabelGray(text:String){
+        rightLabel.text = text
         rightLabel.textColor = UIColor.grayColor()
         rightLabel.font = UIFont.boldSystemFontOfSize(13)
         rightLabel.frame = CGRectMake(SCREEN_WIDTH-180, 5, 150, 35)
@@ -126,8 +128,10 @@ class DetailCellView: UIView,UITextFieldDelegate {
     }
     
     func setPhotoImg(){
-        self.rightImg.removeFromSuperview()
+        rightImg  = UIImageView()
         rightImg.image = UIImage(named: "icon_photo_bg")
+        rightImg.frame = CGRectMake(SCREEN_WIDTH-50, 2.5, 40, 40)
+        self.textField.removeFromSuperview()
         self.addSubview(rightImg)
     }
     
@@ -141,6 +145,17 @@ class DetailCellView: UIView,UITextFieldDelegate {
         self.textField.removeFromSuperview()
      self.lineView.removeFromSuperview()
      self.addSubview(textView)
+    }
+    
+    func setMinTextViewShow(){
+        textView = UITextView(frame:CGRect(x:90, y:5, width:SCREEN_WIDTH-90, height:35))
+//        textView.layer.borderWidth = 1  //边框粗细
+//        textView.layer.borderColor = UIColor.lightGrayColor().CGColor
+//        textView.layer.cornerRadius = 8
+        textView.editable = true
+        textView.selectable = true
+        self.textField.removeFromSuperview()
+        self.addSubview(textView)
     }
     
     func setRCenterLabel(name:String){
@@ -180,6 +195,10 @@ class DetailCellView: UIView,UITextFieldDelegate {
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
+    }
+    
+    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        textView.resignFirstResponder()
     }
     
 }

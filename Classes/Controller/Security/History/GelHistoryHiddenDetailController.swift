@@ -221,7 +221,7 @@ class GelHistoryHiddenDetailController: SinglePhotoViewController {
         
         customView9 = DetailCellView(frame:CGRectMake(0, 450, SCREEN_WIDTH, 45))
         customView9.setLabelName("现场图片：")
-        customView9.setRRightLabel("")
+        customView9.setPhotoImg()
 //        customView9.addOnClickListener(self, action: #selector(self.choiceNormalImage))
 //        setImageViewLoc(0, y: 480)
         self.cstScrollView.addSubview(scrollView)

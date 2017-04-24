@@ -177,6 +177,7 @@ class SecCheckStateListController: BaseTabViewController {
             }
             
             if error == nil{
+                self.totalCount = totalCount!
                 if self.currentPage>totalCount{
                     //self.showHint("已经到最后了", duration: 2, yOffset: 0)
                     self.currentPage -= PAGE_SIZE
@@ -242,7 +243,7 @@ class SecCheckStateListController: BaseTabViewController {
             }
       
         
-        if count > 0 && indexPath.row == count-1 && !toLoadMore{
+        if count > 0 && indexPath.row == count-1 && !toLoadMore && self.totalCount > PAGE_SIZE {
             toLoadMore = true
             currentPage += PAGE_SIZE
             getDatas()
@@ -277,15 +278,10 @@ class SecCheckStateListController: BaseTabViewController {
     func reSet(){
         // 重置当前页
         currentPage = 0
-         totalCount = 0
+        totalCount = 0
         // 重置数组
-      
-            hiddenModels.removeAll()
-            hiddenModels = [SecCheckStateModel]()
-        
+        hiddenModels.removeAll()
+        hiddenModels = [SecCheckStateModel]()
     }
     
-
 }
-
-

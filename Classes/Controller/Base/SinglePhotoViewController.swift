@@ -49,7 +49,7 @@ class SinglePhotoViewController: BaseViewController,UIImagePickerControllerDeleg
                 let image = imageViews[i].image!
                 if image.accessibilityIdentifier == nil {
                     
-                    listImageFile.append(image)
+                    listImageFile.append(image.reSizeImage(CGSize(width: 300, height: 200)))
                 }
             }
         }
@@ -107,7 +107,8 @@ class SinglePhotoViewController: BaseViewController,UIImagePickerControllerDeleg
            UIImageWriteToSavedPhotosAlbum(image, self, nil, nil)
         }
         let imageView = UIImageView()
-        imageView.image = image.reSizeImage(CGSize(width: 300, height: 200))
+        imageView.addOnClickListener(self, action: #selector(showImage))
+        imageView.image = image
         imagePicker.dismissViewControllerAnimated(true, completion: nil)
         self.addImageView(imageView)
     }
@@ -132,6 +133,15 @@ class SinglePhotoViewController: BaseViewController,UIImagePickerControllerDeleg
         //设置图片占用大小
         scrollView.contentSize = CGSize(width: leftWidth + 80, height: IMAGE_HEIGHT)
         imagePicker.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func showImage(sender: AnyObject){
+        let tap = sender as! UITapGestureRecognizer
+        let views = tap.view!
+        let imageView = scrollView.viewWithTag(views.tag) as! UIImageView
+        let controller = ShowSingleImageController()
+        controller.image = imageView.image
+        self.navigationController?.pushViewController(controller, animated: true)
     }
 
     func deleteImage(sender: AnyObject) {

@@ -121,7 +121,7 @@ class SinglePhotoViewController: BaseViewController,UIImagePickerControllerDeleg
         imageViews.append(imageView)
         
         let closeView = UIImageView()
-        closeView.frame = CGRectMake(IMAGE_WIDTH-25, 0, 25, 25)
+        closeView.frame = CGRectMake(IMAGE_WIDTH-15, 0, 15, 15)
         closeView.image = UIImage(named: "delete")
         closeView.tag = imageTag
         

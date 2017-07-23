@@ -17,17 +17,6 @@ class ShowSingleImageController: BaseViewController {
         setNavagation("图片详情")
         imageView = getImageView()
         imageView.image = image
-//        imageView.image = image
-        
-       
-    }
-    override func viewWillAppear(animated: Bool) {
-        //        self.navBarHairlineImageView.hidden = true
-        //设置navigationBar背景
-//        self.navigationController?.navigationBar
-//            .setBackgroundImage(UIImage(named: "head_transparent"), forBarMetrics: .Default)
-//        //设置navigationBar  黑线背景
-//        self.navigationController?.navigationBar.shadowImage = UIImage(named: "head_transparent")
     }
     
     func getImageView()->UIImageView{

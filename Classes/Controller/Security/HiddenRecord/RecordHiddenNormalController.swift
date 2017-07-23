@@ -145,25 +145,11 @@ class RecordHiddenNormalController: SinglePhotoViewController {
         let userInfo = notification.userInfo ?? [:]
         let keyboardFrame = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).CGRectValue()
         let adjustmentHeight = (CGRectGetHeight(keyboardFrame)) * (show ? 1:-1)
-        print("adjustmentHeight = \(adjustmentHeight)")
         majorScrollView.contentInset.bottom += adjustmentHeight
         majorScrollView.scrollIndicatorInsets.bottom += adjustmentHeight
-        
-        print("majorScrollView.contentSize.height = \(majorScrollView.contentSize.height)")
-        
-        
     }
     
-    
-
-    
     func initNormalPageTest(){
-        
-//        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.keyboardWillShow1(_:)), name:UIKeyboardWillShowNotification, object: nil)
-//        //当键盘收起的时候会向系统发出一个通知，
-//        //这个时候需要注册另外一个监听器响应该通知
-//        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.keyboardWillHide1(_:)), name:UIKeyboardWillHideNotification, object: nil)
-        
         majorScrollView = UIScrollView(frame: CGRectMake(0, 0, SCREEN_WIDTH, 715))
        // majorScrollView!.pagingEnabled = true
         majorScrollView!.scrollEnabled = true
@@ -230,11 +216,7 @@ class RecordHiddenNormalController: SinglePhotoViewController {
             self.customView4normal.setRCenterLabel(time)
         })
         customView4normal.setTimeImg()
-        
 
-        
-        
-        
         self.view.addSubview(submitBtnnormal)
            self.view.addSubview(majorScrollView)
         self.majorScrollView.addSubview(customView1normal)
@@ -249,9 +231,7 @@ class RecordHiddenNormalController: SinglePhotoViewController {
         self.majorScrollView.addSubview(customView11)
         self.majorScrollView.addSubview(customView12)
         self.majorScrollView.addSubview(customView13)
- 
-        
-        
+
         submitBtnnormal.snp_makeConstraints { make in
             make.bottom.equalTo(self.view.snp_bottom).offset(-15)
             make.left.equalTo(self.view.snp_left).offset(50)
@@ -268,7 +248,6 @@ class RecordHiddenNormalController: SinglePhotoViewController {
         
     }
 
-    
     
     func initNormalPage(){
         

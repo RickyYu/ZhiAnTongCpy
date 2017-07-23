@@ -50,11 +50,8 @@ class SecurityCheckController: BaseViewController ,ChartViewDelegate,UIActionShe
     }
     
     func getData(){
-  
-        
         var parameters = [String : AnyObject]()
-
-          parameters["company.id"] = self.cpyInfoModal.id
+        parameters["company.id"] = self.cpyInfoModal.id
         
         NetworkTool.sharedTools.loadCpyCount(parameters) { (data, error) in
             
@@ -122,7 +119,7 @@ class SecurityCheckController: BaseViewController ,ChartViewDelegate,UIActionShe
             months.append(month)
             valuesYh.append(Double(item.dangerNum))
             valuesZg.append(Double(item.repairedDanger))
-            
+             print("month = \(month)  dangerNum = \(Double(item.dangerNum)) Double(repairedDanger) = \(Double(item.repairedDanger))")
         }
         
         var dataEntriesYh: [BarChartDataEntry] = []

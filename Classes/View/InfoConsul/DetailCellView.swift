@@ -212,7 +212,4 @@ extension UIView {
         userInteractionEnabled = true
         addGestureRecognizer(gr)
     }
-    
-    
-    
 }

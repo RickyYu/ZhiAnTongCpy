@@ -48,17 +48,17 @@
 	<string>/appExpert/nosecuritycheck/loadExperts.xhtml</string>
 	<key>LOAD_CPY_NORMALDANGER</key>
 	<string>/appNomalDanger/nosecuritycheck/loadNomalDanger.xhtml</string>
-	<key>BASE_URL_DA-</key>
-	<string>http://192.168.2.110:7091/huzhouArchives</string>
 	<key>BASE_URL_DA</key>
+	<string>http://192.168.2.110:7091/huzhouArchives</string>
+	<key>BASE_URL_DA--</key>
 	<string>http://192.168.2.224:8022/huzhouArchives</string>
 	<key>BASE_URL_DA---</key>
 	<string>http://192.168.2.213:8080/huzhouArchives</string>
-	<key>BASE_URL_YH-</key>
+	<key>BASE_URL_YH</key>
 	<string>http://192.168.2.110:7090/huzhou</string>
 	<key>BASE_URL_YH---</key>
 	<string>http://192.168.2.213:8080/huzhou</string>
-	<key>BASE_URL_YH</key>
+	<key>BASE_URL_YH--</key>
 	<string>http://192.168.2.224:8029/huzhou</string>
 	<key>New item</key>
 	<string>BASE_URL_DA---</string>
